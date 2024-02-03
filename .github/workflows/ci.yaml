@@ -48,6 +48,8 @@ jobs:
           make amalgamate
           rm -r src/*
           mv amalgamate/caught.h src/lib.h
+          mv amalgamate/caught.c src/lib.c
+          sed -i 's/#include "caught.h"/#include "lib.h"/' src/lib.c # change name to what tests expect
           make tests debug
 
       - name: Run amalgamated debug
