@@ -1,7 +1,9 @@
 # Constants
 CC = clang
-CFLAGS = -Wall -std=c99
-CFLAGS_DEBUG = -g
+WARNINGS = -Wall -Wextra -Werror -Wno-error=unused-parameter -Wmissing-declarations -Wmissing-variable-declarations
+CFLAGS_COMMON = $(WARNINGS) -std=c99
+CFLAGS_RELEASE = $(CFLAGS_COMMON) -O2
+CFLAGS_DEBUG = $(CFLAGS_COMMON) -O0 -gdwarf-4 -DDEBUG
 
 SRC_DIR = src
 TEST_DIR = tests
@@ -16,10 +18,11 @@ DEBUG_OBJ_FILES := $(OBJ_FILES:%.o=%-debug.o)
 
 .PHONY: all tests clean amalgamate
 
-all: tests main amalgamate
+all: tests debug lib amalgamate
 debug: bin/tests-debug
 
-lib: echo TODO
+lib:
+	@echo TODO
 tests: bin/tests
 
 amalgamate:
@@ -27,13 +30,13 @@ amalgamate:
 
 $(BIN_DIR)/tests-debug: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) $(C_FILES) -o $@
+	$(CC) $(CFLAGS_DEBUG) $(C_FILES) -o $@
 
 $(BIN_DIR)/tests: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(C_FILES) -o $@
+	$(CC) $(CFLAGS_RELEASE) $(C_FILES) -o $@
 
 clean:
 	rm -rf $(BIN_DIR)/* $(OBJ_DIR)/* amalgamate/*
 
-.DEFAULT_GOAL = lib
+.DEFAULT_GOAL = all

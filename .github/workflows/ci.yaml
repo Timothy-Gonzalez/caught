@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install clang & valgrind
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang valgrind
+
+      - name: Build
+        run: |
+          make tests debug
+
+      - name: Run debug
+        run: |
+          bin/tests-debug
+
+      - name: Run optimized
+        run: |
+          bin/tests
+
+      - name: Run w/ valgrind
+        run: |
+          valgrind bin/tests-debug 2> valgrind_output.txt || true
+          cat valgrind_output.txt
+          if ! grep -q "All heap blocks were freed -- no leaks are possible" valgrind_output.txt; then
+            exit 1; # exit if not found, we need this check because valgrind exit codes are bad
+          fi
+
+      - name: Build amalgamated
+        run: |
+          make clean
+          make amalgamate
+          rm -r src/*
+          mv amalgamate/caught.h src/lib.h
+          make tests debug
+
+      - name: Run amalgamated debug
+        run: |
+          bin/tests-debug
+
+      - name: Run amalgamated optimized
+        run: |
+          bin/tests
+
+      - name: Run amalgamated w/ valgrind
+        run: |
+          valgrind bin/tests-debug 2> valgrind_output.txt || true
+          cat valgrind_output.txt
+          if ! grep -q "All heap blocks were freed -- no leaks are possible" valgrind_output.txt; then
+            exit 1; # exit if not found, we need this check because valgrind exit codes are bad
+          fi
