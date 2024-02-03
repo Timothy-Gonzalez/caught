@@ -1,4 +1,6 @@
-#include "../src/lib.h" // in your code, it would be #include "caught.h"
+// NOTE: The location of this include might differ in your code depending on location
+// For example, it could be: #include "caught.h"
+#include "../src/caught.h"
 #include <string.h>
 
 TEST("str - basic")

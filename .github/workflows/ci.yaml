@@ -34,9 +34,8 @@ jobs:
             make clean
             make amalgamate
             rm -r src/*
-            mv amalgamate/caught.c src/lib.c
-            mv amalgamate/caught.h src/lib.h
-            sed -i 's/#include "caught.h"/#include "lib.h"/' src/lib.c # change name to what tests expect
+            mv amalgamate/* src/
+            mv amalgamate/* src/
             make tests debug
           fi
 

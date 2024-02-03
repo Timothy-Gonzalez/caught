@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "lib.h"
+#include "caught.h"
 #include "output.h"
 #include "config.h"
 

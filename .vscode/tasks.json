@@ -30,7 +30,7 @@
     {
       "label": "C: run tests",
       "type": "shell",
-      "command": "./bin/tests",
+      "command": "./bin/tests-debug",
       "dependsOn": "C: make debug",
       "problemMatcher": [],
       "group": {
