@@ -1,6 +1,7 @@
 #include <stddef.h>
 #define _GNU_SOURCE
 #include <stdio.h>
+extern int asprintf(char **strp, const char *fmt, ...);
 
 #include "assertions.h"
 #include "output.h"

@@ -10,8 +10,8 @@ TEST_DIR = tests
 OBJ_DIR = objs
 BIN_DIR = bin
 
-C_FILES := $(shell find . -name '*.c')
-H_FILES := $(shell find . -name '*.h')
+C_FILES := $(shell find $(SRC_DIR) $(TEST_DIR) -name '*.c')
+H_FILES := $(shell find $(SRC_DIR) $(TEST_DIR) -name '*.h')
 
 OBJ_FILES := $(C_FILES:%.c=$(OBJ_DIR)/%.o)
 DEBUG_OBJ_FILES := $(OBJ_FILES:%.o=%-debug.o)
