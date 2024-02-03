@@ -17,31 +17,23 @@ DEBUG_OBJ_FILES := $(OBJ_FILES:%.o=%-debug.o)
 .PHONY: all tests clean amalgamate
 
 all: tests main amalgamate
-debug: bin/tests-debug objs/src/main-debug.o
+debug: bin/tests-debug
 
-main: objs/src/main.o
+lib: echo TODO
 tests: bin/tests
 
 amalgamate:
 	(which python > /dev/null && python tools/amalgamate.py) || (which python3 > /dev/null && python3 tools/amalgamate.py)
 
-$(BIN_DIR)/tests-debug: $(OBJ_FILES) $(H_FILES)
+$(BIN_DIR)/tests-debug: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) $(OBJ_FILES) -o $@
+	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) $(C_FILES) -o $@
 
-$(BIN_DIR)/tests: $(OBJ_FILES) $(H_FILES)
+$(BIN_DIR)/tests: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(OBJ_FILES) -o $@
-
-$(OBJ_DIR)/%-debug.o: ./%.c ./%.h
-	@mkdir -p $(OBJ_DIR)/$(dir $<)
-	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) -c $< -o $@
-
-$(OBJ_DIR)/%.o: ./%.c ./%.h
-	@mkdir -p $(OBJ_DIR)/$(dir $<)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(C_FILES) -o $@
 
 clean:
 	rm -rf $(BIN_DIR)/* $(OBJ_DIR)/* amalgamate/*
 
-.DEFAULT_GOAL = main
+.DEFAULT_GOAL = lib
