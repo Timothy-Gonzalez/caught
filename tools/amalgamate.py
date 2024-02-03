@@ -85,7 +85,7 @@ def amalgamate(out_file: TextIOWrapper, filename: str, c: bool = False):
 
 os.makedirs(path.dirname(OUT_H), exist_ok=True)
 
-print(f"Amalgamate to: {OUT_H}")
+print(f"Amalgamate to: {OUT_H} and {OUT_C}")
 
 with open(OUT_H, "w") as h:
     h.write(HEADER)

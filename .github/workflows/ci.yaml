@@ -35,7 +35,6 @@ jobs:
             make amalgamate
             rm -r src/*
             mv amalgamate/* src/
-            mv amalgamate/* src/
             make tests debug
           fi
 
