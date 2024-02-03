@@ -1,6 +1,6 @@
 ==================================== Caught ====================================
 
-                           A simple C testing library
+                    A lightweight & simple C testing library
 
                       Copyright (c) 2024 Timothy Gonzalez
 

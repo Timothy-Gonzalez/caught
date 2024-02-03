@@ -6,7 +6,7 @@
 [![Crates.io](https://img.shields.io/github/actions/workflow/status/Timothy-Gonzalez/caught/ci.yaml?branch=main&style=for-the-badge)](https://github.com/Timothy-Gonzalez/caught)
 [![License](https://img.shields.io/github/license/Timothy-Gonzalez/caught?style=for-the-badge)](LICENSE.txt)
 
-A simple testing library
+A lightweight & simple C testing library
 
 </div>
 

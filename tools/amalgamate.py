@@ -13,7 +13,7 @@ ENTRY_POINT_H = path.join(SRC_DIR, "main.h")
 HEADER = f"""/*
 ==================================== Caught ====================================
 
-                           A simple C testing library
+                    A lightweight & simple C testing library
 
                       Copyright (c) 2024 Timothy Gonzalez
 
