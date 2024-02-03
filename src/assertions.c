@@ -47,6 +47,21 @@ void caught_internal_handle_assertion(caught_internal_assertion *assertion)
     asprintf(&assertion.expected, format, caught_internal_expected);               \
     asprintf(&assertion.got, format, caught_internal_got);
 
+int caught_internal_expect_equal_ptr(caught_internal_assertion *assertion, void *expected, void *got)
+{
+    char *format = "%p";
+    asprintf(&assertion->expected, format, expected);
+    asprintf(&assertion->got, format, got);
+
+    return expected == got;
+}
+int caught_internal_expect_equal_bool(caught_internal_assertion *assertion, bool expected, bool got)
+{
+    assertion->expected = strdup(expected ? "true" : "false");
+    assertion->got = strdup(got ? "true" : "false");
+
+    return expected == got;
+}
 int caught_internal_expect_equal_int(caught_internal_assertion *assertion, int expected, int got)
 {
     char *format = "%d";

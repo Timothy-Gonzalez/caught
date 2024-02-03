@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "state.h"
 #include "config.h"
 #ifndef CAUGHT_ASSERTIONS
@@ -16,6 +18,8 @@ typedef struct caught_internal_assertion
 void caught_internal_fancy_str(const char *str);
 void caught_internal_handle_assertion(caught_internal_assertion *assertion);
 
+int caught_internal_expect_equal_ptr(caught_internal_assertion *assertion, void *expected, void *got);
+int caught_internal_expect_equal_bool(caught_internal_assertion *assertion, bool expected, bool got);
 int caught_internal_expect_equal_int(caught_internal_assertion *assertion, int expected, int got);
 int caught_internal_expect_equal_char(caught_internal_assertion *assertion, char expected, char got);
 int caught_internal_expect_equal_str(caught_internal_assertion *assertion, char *expected, char *got);
@@ -49,8 +53,10 @@ int caught_internal_expect_equal_str(caught_internal_assertion *assertion, char 
         CAUGHT_INTERNAL_PASS_ASSERTION(handler(&caught_assertion, expected_exp, got_exp)) \
     } while (0)
 
+#define EXPECT_EQUAL_PTR(expected_exp, got_exp) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE("EXPECT_EQUAL_PTR", caught_internal_expect_equal_ptr, expected_exp, got_exp)
 #define EXPECT_EQUAL_BOOL(expected_exp, got_exp) \
-    CAUGHT_INTERNAL_EXPECT_HANDLE("EXPECT_EQUAL_BOOL", caught_internal_expect_equal_int, expected_exp, got_exp)
+    CAUGHT_INTERNAL_EXPECT_HANDLE("EXPECT_EQUAL_BOOL", caught_internal_expect_equal_bool, expected_exp, got_exp)
 #define EXPECT_EQUAL_INT(expected_exp, got_exp) \
     CAUGHT_INTERNAL_EXPECT_HANDLE("EXPECT_EQUAL_INT", caught_internal_expect_equal_int, expected_exp, got_exp)
 #define EXPECT_EQUAL_CHAR(expected_exp, got_exp) \
