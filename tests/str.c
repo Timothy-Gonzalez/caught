@@ -1,4 +1,4 @@
-#include "../src/lib.h"
+#include "../src/lib.h" // in your code, it would be #include "caught.h"
 #include <string.h>
 
 TEST("str - basic")
