@@ -13,6 +13,7 @@ void caught_output_info();
 void caught_output_bold();
 void caught_output_reset();
 
+void caught_output_header();
 void caught_output_status_tag(int pass);
 void caught_output_assertion(caught_internal_assertion *assertion);
 void caught_output_test_summary(const char *test_name, int passed, int failed);

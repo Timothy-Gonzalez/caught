@@ -9,6 +9,7 @@ int main()
     caught_internal_initialize_color_output();
 
     printf("\n");
+    caught_output_header();
 
     int passed_tests = 0;
     for (int i = 0; i < caught_internal.tests_num; ++i)

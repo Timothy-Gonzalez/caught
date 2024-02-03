@@ -8,6 +8,12 @@
 #define CAUGHT_COLOR_INFO "\x1b[34m"    // ANSI blue
 #define CAUGHT_OUTPUT_BOLD "\x1b[1m"    // ANSI bold
 #define CAUGHT_OUTPUT_RESET "\x1b[0m"   // ANSI reset
+
+#define CAUGHT_OUTPUT_HEADER "==================================== Caught ====================================\n\n" \
+                             "                    A lightweight & simple C testing library\n\n"                     \
+                             "                      Copyright(c) 2024 Timothy Gonzalez\n\n"                         \
+                             "================================================================================\n"
+
 int caught_color_enabled = 0;
 
 void caught_internal_initialize_color_output()
@@ -55,6 +61,15 @@ void caught_output_reset()
     if (!caught_color_enabled)
         return;
     printf("%s", CAUGHT_OUTPUT_RESET);
+}
+
+void caught_output_header()
+{
+    printf("%s", CAUGHT_OUTPUT_HEADER);
+    caught_output_bold();
+    caught_output_info();
+    printf("\nLoaded %i tests\n", caught_internal.tests_num);
+    caught_output_reset();
 }
 
 void caught_output_status_tag(int pass)
