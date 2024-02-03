@@ -2,8 +2,8 @@
 
 # Caught
 
-[![Crates.io](https://img.shields.io/github/v/tag/Timothy-Gonzalez/caught?style=for-the-badge&label=Version&cacheSeconds=300)](https://github.com/Timothy-Gonzalez/caught)
-[![Crates.io](https://img.shields.io/github/actions/workflow/status/Timothy-Gonzalez/caught/ci.yaml?branch=main&style=for-the-badge&cacheSeconds=300)](https://github.com/Timothy-Gonzalez/caught)
+[![Version](https://img.shields.io/github/v/tag/Timothy-Gonzalez/caught?style=for-the-badge&label=Version&cacheSeconds=300)](https://github.com/Timothy-Gonzalez/caught)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Timothy-Gonzalez/caught/ci.yaml?branch=main&style=for-the-badge&cacheSeconds=300)](https://github.com/Timothy-Gonzalez/caught/actions/workflows/ci.yaml?query=branch%3Amain)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge&cacheSeconds=300)](LICENSE.txt)
 
 A lightweight & simple C testing library
