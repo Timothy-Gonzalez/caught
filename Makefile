@@ -25,19 +25,19 @@ tests: bin/tests
 amalgamate:
 	(which python > /dev/null && python tools/amalgamate.py) || (which python3 > /dev/null && python3 tools/amalgamate.py)
 
-$(BIN_DIR)/tests-debug: $(DEBUG_OBJ_FILES)
+$(BIN_DIR)/tests-debug: $(OBJ_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) $^ -o $@
+	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) $(OBJ_FILES) -o $@
 
-$(BIN_DIR)/tests: $(OBJ_FILES)
+$(BIN_DIR)/tests: $(OBJ_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(OBJ_FILES) -o $@
 
-$(OBJ_DIR)/%-debug.o: ./%.c
+$(OBJ_DIR)/%-debug.o: ./%.c ./%.h
 	@mkdir -p $(OBJ_DIR)/$(dir $<)
 	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) -c $< -o $@
 
-$(OBJ_DIR)/%.o: ./%.c
+$(OBJ_DIR)/%.o: ./%.c ./%.h
 	@mkdir -p $(OBJ_DIR)/$(dir $<)
 	$(CC) $(CFLAGS) -c $< -o $@
 
