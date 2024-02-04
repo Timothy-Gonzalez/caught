@@ -15,7 +15,7 @@ void caught_output_reset();
 
 void caught_output_header();
 void caught_output_status_tag(int pass);
-void caught_output_assertion(caught_internal_assertion *assertion);
+void caught_output_assertion_result(caught_internal_assertion_result assertion_result);
 void caught_output_test_summary(const char *test_name, int passed, int failed);
 void caught_output_generic_summary(const char *prefix, int passed, int failed);
 void caught_output_summary(const char *prefix, int passed, int failed);

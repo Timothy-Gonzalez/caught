@@ -5,12 +5,14 @@
 
 TEST("str - basic")
 {
-    EXPECT_EQUAL_STR("abc", "abc");
-    EXPECT_EQUAL_STR("def", "def");
+    EXPECT_STR("abc", ==, "abc");
+    EXPECT_STR("def", ==, "def");
+    EXPECT_STR(NULL, !=, "other");
+    EXPECT_STR("one string", !=, "other");
 }
 
 TEST("str - strstr")
 {
     char *str = "a long string that can be indexed";
-    EXPECT_EQUAL_STR("be indexed", strstr(str, "be"));
+    EXPECT_STR("be indexed", ==, strstr(str, "be"));
 }

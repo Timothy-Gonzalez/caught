@@ -80,22 +80,27 @@ void caught_output_status_tag(int pass)
     caught_output_reset();
 }
 
-void caught_output_assertion(caught_internal_assertion *assertion)
+void caught_output_assertion_result(caught_internal_assertion_result assertion_result)
 {
     printf("\n");
 
-    caught_output_status_tag(assertion->pass);
-    printf("./%s:%i:\n", assertion->file, assertion->line);
+    caught_output_status_tag(assertion_result.pass);
+    printf("./%s:%i:\n", assertion_result.file, assertion_result.line);
     caught_output_info();
-    printf("    %s\n", assertion->call);
+    printf("    %s\n", assertion_result.expression);
     caught_output_reset();
-    printf("        expected: ");
+
+    const char *expected_statement = "expected";
+    const char *to_be_statement = caught_operator_to_to_be_statement(assertion_result.operator);
+    int statement_padding = (strlen(expected_statement) > strlen(to_be_statement)) ? strlen(expected_statement) : strlen(to_be_statement);
+
+    printf("        %s:%*s ", expected_statement, statement_padding - (int)strlen(expected_statement), "");
     caught_output_success();
-    caught_internal_fancy_str(assertion->expected);
+    printf("%s", assertion_result.lhs == NULL ? "NULL" : assertion_result.lhs);
     caught_output_reset();
-    printf("\n        got:      ");
-    assertion->pass ? caught_output_success() : caught_output_fail();
-    caught_internal_fancy_str(assertion->got);
+    printf("\n        %s:%*s ", to_be_statement, statement_padding - (int)strlen(to_be_statement), "");
+    assertion_result.pass ? caught_output_success() : caught_output_fail();
+    printf("%s", assertion_result.rhs == NULL ? "NULL" : assertion_result.rhs);
     caught_output_reset();
     printf("\n");
 }

@@ -6,6 +6,20 @@
 
 TEST("bool - basic")
 {
-    EXPECT_EQUAL_BOOL(true, true);
-    EXPECT_EQUAL_BOOL(false, false);
+    EXPECT_BOOL(true, ==, true);
+    EXPECT_BOOL(false, ==, false);
+    EXPECT_BOOL(true, !=, false);
+    EXPECT_BOOL(false, !=, true);
+}
+
+TEST("bool - but bools are ints!")
+{
+
+    EXPECT_BOOL(true, >, false);
+    EXPECT_BOOL(true, >=, false);
+    EXPECT_BOOL(true, >=, true);
+
+    EXPECT_BOOL(false, <, true);
+    EXPECT_BOOL(false, <=, true);
+    EXPECT_BOOL(false, <=, false);
 }
