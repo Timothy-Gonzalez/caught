@@ -26,17 +26,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang valgrind
 
+      - name: Amalgamate
+        if: ${{ matrix.for }} == "amalgamated"
+        run: |
+          make amalgamate
+          rm -r src/* tests/* # Get rid of current code
+          cp -r amalgamate/test/* . # Move the amalgamated version in its place (so later stuff works)
+
       - name: Build
         run: |
-          if [ "${{ matrix.for }}" == "regular" ]; then
-            make tests debug
-            elif [ "${{ matrix.for }}" == "amalgamated" ]; then
-            make clean
-            make amalgamate
-            rm -r src/*
-            mv amalgamate/* src/
-            make tests debug
-          fi
+          make tests debug
 
       - name: Run tests (debug)
         run: |

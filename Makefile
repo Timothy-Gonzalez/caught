@@ -7,26 +7,25 @@ CFLAGS_DEBUG = $(CFLAGS_COMMON) -O0 -gdwarf-4 -DDEBUG
 
 SRC_DIR = src
 TEST_DIR = tests
+AMALGAMATE_DIRS = ./amalgamate/test/src/ ./amalgamate/test/tests/
 OBJ_DIR = objs
 BIN_DIR = bin
 
 C_FILES := $(shell find $(SRC_DIR) $(TEST_DIR) -name '*.c')
 H_FILES := $(shell find $(SRC_DIR) $(TEST_DIR) -name '*.h')
 
-OBJ_FILES := $(C_FILES:%.c=$(OBJ_DIR)/%.o)
-DEBUG_OBJ_FILES := $(OBJ_FILES:%.o=%-debug.o)
-
 .PHONY: all tests clean amalgamate
 
-all: tests debug lib amalgamate
-debug: bin/tests-debug
-
-lib:
-	@echo TODO
-tests: bin/tests
+all: tests debug amalgamate
+debug: bin/tests-debug bin/tests-amalgamate-debug
+tests: bin/tests bin/tests-amalgamate
 
 amalgamate:
 	(which python > /dev/null && python tools/amalgamate.py) || (which python3 > /dev/null && python3 tools/amalgamate.py)
+	rm -rf ./amalgamate/test/src/ ./amalgamate/test/tests/
+	mkdir -p ./amalgamate/test/src/
+	cp ./amalgamate/caught.h ./amalgamate/caught.c ./amalgamate/test/src/
+	cp -r ./tests ./amalgamate/test/
 
 $(BIN_DIR)/tests-debug: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
@@ -35,6 +34,14 @@ $(BIN_DIR)/tests-debug: $(C_FILES) $(H_FILES)
 $(BIN_DIR)/tests: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS_RELEASE) $(C_FILES) -o $@
+
+$(BIN_DIR)/tests-amalgamate-debug: amalgamate $(C_FILES) $(H_FILES)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS_DEBUG) $$(find $(AMALGAMATE_DIRS) -name '*.c') -o $@
+
+$(BIN_DIR)/tests-amalgamate: amalgamate $(C_FILES) $(H_FILES)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS_RELEASE) $$(find $(AMALGAMATE_DIRS) -name '*.c') -o $@
 
 clean:
 	rm -rf $(BIN_DIR)/* $(OBJ_DIR)/* amalgamate/*
