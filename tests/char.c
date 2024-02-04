@@ -6,12 +6,22 @@
 
 TEST("char - basic")
 {
-    EXPECT_EQUAL_CHAR('a', 'a');
-    EXPECT_EQUAL_CHAR('z', 'z');
+    EXPECT_CHAR('a', ==, 'a');
+    EXPECT_CHAR('a', !=, 'z');
 }
 
-TEST("char - basic")
+TEST("char - inequalities")
 {
-    EXPECT_EQUAL_CHAR('a', *strchr("what a day", 'a'));
-    EXPECT_EQUAL_CHAR('d', *strchr("what a day", 'd'));
+    EXPECT_CHAR('B', <, 'c');
+    EXPECT_CHAR('a', <=, 'z');
+    EXPECT_CHAR('z', <=, 'z');
+    EXPECT_CHAR('a', >, 'W');
+    EXPECT_CHAR('c', >=, 'b');
+    EXPECT_CHAR('c', >=, 'c');
+}
+
+TEST("char - strstr")
+{
+    EXPECT_CHAR('a', ==, *strchr("what a day", 'a'));
+    EXPECT_CHAR('d', ==, *strchr("what a day", 'd'));
 }
