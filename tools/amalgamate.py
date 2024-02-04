@@ -50,6 +50,7 @@ def find_files(directory, extension):
         for file in files:
             if file.endswith(extension):
                 matched_files.append(os.path.join(root, file))
+    matched_files.sort() # needed for consistency on all platforms
     return matched_files
 
 def amalgamate(out_file: TextIOWrapper, filename: str, c: bool = False):
