@@ -8,10 +8,10 @@ SRC_DIR = "./src"
 OUT_H = "./amalgamate/caught.h"
 OUT_C = "./amalgamate/caught.c"
 
-COLLAPSE_C_INCLUDES = '#include "caught.h"\n'
+LIB_INCLUDE_FROM_C = '#include "caught.h"\n' # Singularly include entire lib for c file
 
 ENTRY_POINT_C = path.join(SRC_DIR, "main.c")
-ENTRY_POINT_H = path.join(SRC_DIR, "lib.h")
+ENTRY_POINT_H = path.join(SRC_DIR, "caught.h")
 
 with open("LICENSE.txt", "r") as h:
     LICENSE = "".join(h.readlines()[:-2])
@@ -70,9 +70,6 @@ def amalgamate(out_file: TextIOWrapper, filename: str, c: bool = False):
                 continue
 
             if c:
-                if COLLAPSE_C_INCLUDES not in defined_includes:
-                    defined_includes.add(COLLAPSE_C_INCLUDES)
-                    out_file.write(COLLAPSE_C_INCLUDES)
                 continue
 
             rel_header = match.group(1)
@@ -90,6 +87,7 @@ print(f"Amalgamate to: {OUT_H} and {OUT_C}")
 
 with open(OUT_H, "w") as h:
     h.write(HEADER)
+
     amalgamate(h, ENTRY_POINT_H)
 
     # grab any missed h files
@@ -99,6 +97,7 @@ with open(OUT_H, "w") as h:
 
 with open(OUT_C, "w") as c:
     c.write(HEADER)
+    c.write(LIB_INCLUDE_FROM_C)
 
     # grab all c files (order doesn't matter now)
     for file in find_files(SRC_DIR, ".c"):
