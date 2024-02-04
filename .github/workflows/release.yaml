@@ -52,21 +52,9 @@ jobs:
         shell: bash
         run: |
           mkdir staging
-          cp amalgamate/* staging/
+          cp amalgamate/caught.h amalgamate/caught.c staging/
           cd staging
           zip ../release.zip *
-
-      - name: Prepare Asset Name
-        shell: bash
-        run: |
-          TAG_NAME=$(
-            if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-              echo "${{ github.event.inputs.tag }}";
-            else
-              echo "${{ github.ref_name }}";
-            fi
-          )
-          echo "ASSET_NAME=caught-$TAG_NAME" >> $GITHUB_ENV
 
       - name: Upload .h to Release
         uses: actions/upload-release-asset@v1
@@ -88,8 +76,14 @@ jobs:
           asset_name: caught.c
           asset_content_type: application/octet-stream
 
-      - name: Upload Archive as Artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload .h as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ASSET_NAME }}.zip
-          path: release.zip
+          name: caught.h
+          path: amalgamate/caught.h
+
+      - name: Upload .c as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: caught.c
+          path: amalgamate/caught.c
