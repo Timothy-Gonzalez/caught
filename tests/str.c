@@ -11,6 +11,20 @@ TEST("str - basic")
     EXPECT_STR("one string", !=, "other");
 }
 
+TEST("str - ptrs")
+{
+    char *array[] = {"abc", "def", NULL};
+    char *array2[] = {"abc", "def", NULL};
+
+    EXPECT_STR_PTR(array, ==, array2);
+    EXPECT_STR_PTR(array, !=, array + 1);
+
+    EXPECT_STR_PTR(NULL, ==, NULL);
+    EXPECT_STR_PTR(NULL, !=, array);
+    EXPECT_STR_PTR(array, !=, NULL);
+    EXPECT_STR_PTR(NULL, !=, array + 2);
+}
+
 TEST("str - strstr")
 {
     char *str = "a long string that can be indexed";

@@ -37,21 +37,44 @@ const char *caught_operator_to_to_be_statement(enum caught_operator operator)
 
 bool caught_internal_evaluator_ptr(void *lhs, enum caught_operator operator, void * rhs)
 {
-    CAUGHT_GENERATE_GENERIC_EVALUATOR
+    CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs)
 }
+bool caught_internal_evaluator_ptr_ptr(void **lhs, enum caught_operator operator, void ** rhs)
+{
+    CAUGHT_GENERATE_GENERIC_EVALUATOR_NULL_GUARD(lhs, operator, rhs);
+    return caught_internal_evaluator_ptr(*lhs, operator, * rhs);
+}
+
 bool caught_internal_evaluator_bool(bool lhs, enum caught_operator operator, bool rhs)
 {
-    CAUGHT_GENERATE_GENERIC_EVALUATOR
+    CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs)
+}
+bool caught_internal_evaluator_bool_ptr(bool *lhs, enum caught_operator operator, bool * rhs)
+{
+    CAUGHT_GENERATE_GENERIC_EVALUATOR_NULL_GUARD(lhs, operator, rhs);
+    return caught_internal_evaluator_bool(*lhs, operator, * rhs);
 }
 
 bool caught_internal_evaluator_int(int lhs, enum caught_operator operator, int rhs)
 {
-    CAUGHT_GENERATE_GENERIC_EVALUATOR
+    CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs)
 }
+bool caught_internal_evaluator_int_ptr(int *lhs, enum caught_operator operator, int * rhs)
+{
+    CAUGHT_GENERATE_GENERIC_EVALUATOR_NULL_GUARD(lhs, operator, rhs);
+    return caught_internal_evaluator_int(*lhs, operator, * rhs);
+}
+
 bool caught_internal_evaluator_char(char lhs, enum caught_operator operator, char rhs)
 {
-    CAUGHT_GENERATE_GENERIC_EVALUATOR
+    CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs)
 }
+bool caught_internal_evaluator_char_ptr(char *lhs, enum caught_operator operator, char * rhs)
+{
+    CAUGHT_GENERATE_GENERIC_EVALUATOR_NULL_GUARD(lhs, operator, rhs);
+    return caught_internal_evaluator_int(*lhs, operator, * rhs);
+}
+
 bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, char * rhs)
 {
     bool null_exists = (lhs == NULL) || (rhs == NULL);
@@ -65,4 +88,9 @@ bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, cha
         fprintf(stderr, "Cannot compare strings with %s, only == and != are supported!", caught_operator_to_str(operator));
         exit(1);
     }
+}
+bool caught_internal_evaluator_str_ptr(char **lhs, enum caught_operator operator, char ** rhs)
+{
+    CAUGHT_GENERATE_GENERIC_EVALUATOR_NULL_GUARD(lhs, operator, rhs);
+    return caught_internal_evaluator_str(*lhs, operator, * rhs);
 }

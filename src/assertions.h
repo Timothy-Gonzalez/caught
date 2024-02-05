@@ -27,35 +27,49 @@ bool caught_internal_handle_assertion_result(caught_internal_assertion_result as
 // of assertions accordingly.
 //
 // Note: do while is required to have non-conflicting scope if multiple assertions are used
-#define CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_exp, lhs_exp, operator_exp, rhs_exp, assertion_handler, formatter) \
-    do                                                                                                                      \
-    {                                                                                                                       \
-        type_exp caught_internal_lhs = (lhs_exp);                                                                           \
-        type_exp caught_internal_rhs = (rhs_exp);                                                                           \
-        caught_internal_assertion_result caught_internal_assertion_result = {                                               \
-            .file = __FILE__,                                                                                               \
-            .line = __LINE__,                                                                                               \
-            .expression = "EXPECT_" #func_postfix "( " #lhs_exp " " #operator_exp " " #rhs_exp " )",                        \
-            .lhs = formatter(caught_internal_lhs),                                                                          \
-            .rhs = formatter(caught_internal_rhs),                                                                          \
-            .operator= caught_str_to_operator(#operator_exp),                                                               \
-            .pass = assertion_handler(caught_internal_lhs, caught_str_to_operator(#operator_exp), caught_internal_rhs),     \
-        };                                                                                                                  \
-        if (caught_internal_handle_assertion_result(caught_internal_assertion_result))                                      \
-        {                                                                                                                   \
-            return;                                                                                                         \
-        }                                                                                                                   \
+#define CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_exp, lhs_exp, operator_exp, rhs_exp, evaluator, formatter) \
+    do                                                                                                              \
+    {                                                                                                               \
+        type_exp caught_internal_lhs = (lhs_exp);                                                                   \
+        type_exp caught_internal_rhs = (rhs_exp);                                                                   \
+        caught_internal_assertion_result caught_internal_assertion_result = {                                       \
+            .file = __FILE__,                                                                                       \
+            .line = __LINE__,                                                                                       \
+            .expression = "EXPECT_" #func_postfix "( " #lhs_exp " " #operator_exp " " #rhs_exp " )",                \
+            .lhs = formatter(caught_internal_lhs),                                                                  \
+            .rhs = formatter(caught_internal_rhs),                                                                  \
+            .operator= caught_str_to_operator(#operator_exp),                                                       \
+            .pass = evaluator(caught_internal_lhs, caught_str_to_operator(#operator_exp), caught_internal_rhs),     \
+        };                                                                                                          \
+        if (caught_internal_handle_assertion_result(caught_internal_assertion_result))                              \
+        {                                                                                                           \
+            return;                                                                                                 \
+        }                                                                                                           \
     } while (0)
 
 #define EXPECT_PTR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE(PTR, void *, lhs, op, rhs, caught_internal_evaluator_ptr, caught_internal_formatter_ptr)
+#define EXPECT_PTR_PTR(lhs, op, rhs) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(PTR_PTR, void **, lhs, op, rhs, caught_internal_evaluator_ptr_ptr, caught_internal_formatter_ptr_ptr)
+
 #define EXPECT_BOOL(lhs, op, rhs) \
-    CAUGHT_INTERNAL_EXPECT_HANDLE(BOOL, bool, lhs, op, rhs, caught_internal_evaluator_int, caught_internal_formatter_bool)
+    CAUGHT_INTERNAL_EXPECT_HANDLE(BOOL, bool, lhs, op, rhs, caught_internal_evaluator_bool, caught_internal_formatter_bool)
+#define EXPECT_BOOL_PTR(lhs, op, rhs) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(BOOL_PTR, bool *, lhs, op, rhs, caught_internal_evaluator_bool_ptr, caught_internal_formatter_bool_ptr)
+
 #define EXPECT_INT(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE(INT, int, lhs, op, rhs, caught_internal_evaluator_int, caught_internal_formatter_int)
+#define EXPECT_INT_PTR(lhs, op, rhs) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(INT_PTR, int *, lhs, op, rhs, caught_internal_evaluator_int_ptr, caught_internal_formatter_int_ptr)
+
 #define EXPECT_CHAR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE(CHAR, char, lhs, op, rhs, caught_internal_evaluator_char, caught_internal_formatter_char)
+#define EXPECT_CHAR_PTR(lhs, op, rhs) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(CHAR_PTR, char *, lhs, op, rhs, caught_internal_evaluator_char_ptr, caught_internal_formatter_char_ptr)
+
 #define EXPECT_STR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE(STR, char *, lhs, op, rhs, caught_internal_evaluator_str, caught_internal_formatter_str)
+#define EXPECT_STR_PTR(lhs, op, rhs) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(STR_PTR, char **, lhs, op, rhs, caught_internal_evaluator_str_ptr, caught_internal_formatter_str_ptr)
 
 #endif

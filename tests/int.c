@@ -19,6 +19,25 @@ TEST("int - inequalities")
     EXPECT_INT(3, <=, 3);
 }
 
+TEST("int - ptrs")
+{
+    int array[] = {1, 5, 3, 2};
+    int array2[] = {1, 5, 3, 2};
+
+    EXPECT_INT_PTR(array, ==, array2);
+    EXPECT_INT_PTR(array, !=, array + 1);
+
+    EXPECT_INT_PTR(NULL, !=, array);
+    EXPECT_INT_PTR(array, !=, NULL);
+
+    EXPECT_INT_PTR(array + 1, >, array);
+    EXPECT_INT_PTR(array + 2, <, array + 1);
+    EXPECT_INT_PTR(array + 1, >=, array);
+    EXPECT_INT_PTR(array, >=, array2);
+    EXPECT_INT_PTR(array + 2, <=, array + 1);
+    EXPECT_INT_PTR(array, <=, array);
+}
+
 int factorial(n)
 {
     if (n <= 1)

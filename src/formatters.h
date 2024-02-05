@@ -9,9 +9,28 @@
 // they must return a dynamically allocated string that represents that value
 
 char *caught_internal_formatter_ptr(void *value);
+char *caught_internal_formatter_ptr_ptr(void **value);
+
 char *caught_internal_formatter_bool(bool value);
+char *caught_internal_formatter_bool_ptr(bool *value);
+
 char *caught_internal_formatter_int(int value);
+char *caught_internal_formatter_int_ptr(int *value);
+
 char *caught_internal_formatter_char(char value);
+char *caught_internal_formatter_char_ptr(char *value);
+
 char *caught_internal_formatter_str(char *value);
+char *caught_internal_formatter_str_ptr(char **value);
+
+#define CAUGHT_INTERNAL_FORMATTER_FORMAT(fstr, value) \
+    char *result;                                     \
+    asprintf(&result, fstr, value);                   \
+    return result;
+#define CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value) \
+    if (value == NULL)                              \
+    {                                               \
+        return NULL;                                \
+    }
 
 #endif
