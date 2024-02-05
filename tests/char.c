@@ -20,6 +20,25 @@ TEST("char - inequalities")
     EXPECT_CHAR('c', >=, 'c');
 }
 
+TEST("char - ptrs")
+{
+    char array[] = {'a', 'c', 'b', 'd'};
+    char array2[] = {'a', 'c', 'b', 'd'};
+
+    EXPECT_CHAR_PTR(array, ==, array2);
+    EXPECT_CHAR_PTR(array, !=, array + 1);
+
+    EXPECT_CHAR_PTR(NULL, ==, NULL);
+    EXPECT_CHAR_PTR(NULL, !=, array);
+
+    EXPECT_CHAR_PTR(array + 2, <, array + 1);
+    EXPECT_CHAR_PTR(array + 2, <=, array + 1);
+    EXPECT_CHAR_PTR(array, <=, array2);
+    EXPECT_CHAR_PTR(array + 1, >, array);
+    EXPECT_CHAR_PTR(array + 1, >=, array);
+    EXPECT_CHAR_PTR(array, >=, array);
+}
+
 TEST("char - strstr")
 {
     EXPECT_CHAR('a', ==, *strchr("what a day", 'a'));

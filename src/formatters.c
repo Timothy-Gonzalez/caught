@@ -5,37 +5,51 @@
 
 char *caught_internal_formatter_ptr(void *value)
 {
-    char *result;
-    asprintf(&result, "%p", value);
-    return result;
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("%p", value);
+}
+char *caught_internal_formatter_ptr_ptr(void **value)
+{
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
+    return caught_internal_formatter_ptr(*value);
 }
 
 char *caught_internal_formatter_bool(bool value)
 {
     return (value) ? strdup("true") : strdup("false");
 }
+char *caught_internal_formatter_bool_ptr(bool *value)
+{
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
+    return caught_internal_formatter_bool(*value);
+}
 
 char *caught_internal_formatter_int(int value)
 {
-    char *result;
-    asprintf(&result, "%i", value);
-    return result;
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("%i", value);
+}
+char *caught_internal_formatter_int_ptr(int *value)
+{
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
+    return caught_internal_formatter_int(*value);
 }
 
 char *caught_internal_formatter_char(char value)
 {
-    char *result;
-    asprintf(&result, "%c", value);
-    return result;
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("%c", value)
+}
+char *caught_internal_formatter_char_ptr(char *value)
+{
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
+    return caught_internal_formatter_char(*value);
 }
 
 char *caught_internal_formatter_str(char *value)
 {
-    if (value == NULL)
-    {
-        return NULL;
-    }
-    char *result;
-    asprintf(&result, "\"%s\"", value);
-    return result;
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("%s", value)
+}
+char *caught_internal_formatter_str_ptr(char **value)
+{
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
+    return caught_internal_formatter_str(*value);
 }
