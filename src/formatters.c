@@ -53,3 +53,13 @@ char *caught_internal_formatter_str_ptr(char **value)
     CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
     return caught_internal_formatter_str(*value);
 }
+
+char *caught_internal_formatter_exit_status(caught_internal_process_status value)
+{
+    const char *type = value.type ? "Signal" : "Exit code";
+    if (value.status_str)
+    {
+        CAUGHT_INTERNAL_FORMATTER_FORMAT("%s (%i)", value.status_str, value.status)
+    }
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("%s %i", type, value.status)
+}

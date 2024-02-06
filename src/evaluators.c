@@ -94,3 +94,14 @@ bool caught_internal_evaluator_str_ptr(char **lhs, enum caught_operator operator
     CAUGHT_GENERATE_GENERIC_EVALUATOR_NULL_GUARD(lhs, operator, rhs);
     return caught_internal_evaluator_str(*lhs, operator, * rhs);
 }
+
+bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, enum caught_operator operator, caught_internal_process_status rhs)
+{
+    if (operator!= CAUGHT_OP_EQUAL)
+    {
+        fprintf(stderr, "Cannot compare exit statuses with %s, only == is supported!", caught_operator_to_str(operator));
+        exit(1);
+    }
+
+    return lhs.type == rhs.type && lhs.status == rhs.status;
+}
