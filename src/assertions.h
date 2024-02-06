@@ -4,6 +4,7 @@
 #include "config.h"
 #include "evaluators.h"
 #include "formatters.h"
+#include "fork.h"
 
 #ifndef CAUGHT_ASSERTIONS
 #define CAUGHT_ASSERTIONS
@@ -71,5 +72,19 @@ bool caught_internal_handle_assertion_result(caught_internal_assertion_result as
     CAUGHT_INTERNAL_EXPECT_HANDLE(STR, char *, lhs, op, rhs, caught_internal_evaluator_str, caught_internal_formatter_str)
 #define EXPECT_STR_PTR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE(STR_PTR, char **, lhs, op, rhs, caught_internal_evaluator_str_ptr, caught_internal_formatter_str_ptr)
+
+#define CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(func_name, expected_status, execute_block)                                               \
+    do                                                                                                                                   \
+    {                                                                                                                                    \
+        CAUGHT_INTERNAL_FORK(execute_block)                                                                                              \
+        CAUGHT_INTERNAL_EXPECT_HANDLE(func_name, caught_internal_process_status, caught_internal_fork_child_status, ==, expected_status, \
+                                      caught_internal_evaluator_exit_status, caught_internal_formatter_exit_status);                     \
+    } while (0)
+
+#define EXPECT_EXIT(expected_status, execute_block) \
+    CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(EXIT, create_caught_internal_process_status(0, expected_status), execute_block)
+
+#define EXPECT_SIGNAL(expected_status, execute_block) \
+    CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(EXIT, create_caught_internal_process_status(1, expected_status), execute_block)
 
 #endif

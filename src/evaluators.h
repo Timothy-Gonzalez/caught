@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <string.h>
+#include "fork.h"
 
 #ifndef CAUGHT_EVALUATORS
 #define CAUGHT_EVALUATORS
@@ -51,6 +52,8 @@ bool caught_internal_evaluator_char_ptr(char *lhs, enum caught_operator operator
 
 bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, char * rhs);
 bool caught_internal_evaluator_str_ptr(char **lhs, enum caught_operator operator, char ** rhs);
+
+bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, enum caught_operator operator, caught_internal_process_status rhs);
 
 // Uses default operators (==, <=, >=, ...) to compare lhs to rhs
 #define CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs) \
