@@ -1,13 +1,19 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <stdarg.h>
+#include <errno.h>
 #include "output.h"
+#include "assertion-result.h"
+#include "state.h"
 
-#define CAUGHT_COLOR_SUCCESS "\x1b[32m" // ANSI green
-#define CAUGHT_COLOR_FAIL "\x1b[31m"    // ANSI red
-#define CAUGHT_COLOR_WARNING "\x1b[33m" // ANSI yellow
-#define CAUGHT_COLOR_INFO "\x1b[34m"    // ANSI blue
-#define CAUGHT_OUTPUT_BOLD "\x1b[1m"    // ANSI bold
-#define CAUGHT_OUTPUT_RESET "\x1b[0m"   // ANSI reset
+#define CAUGHT_COLOR_SUCCESS "\x1b[32m"            // ANSI green
+#define CAUGHT_COLOR_BACKGROUND_SUCCESS "\x1b[42m" // ANSI background green
+#define CAUGHT_COLOR_FAIL "\x1b[31m"               // ANSI red
+#define CAUGHT_COLOR_BACKGROUND_FAIL "\x1b[41m"    // ANSI background red
+#define CAUGHT_COLOR_WARNING "\x1b[33m"            // ANSI yellow
+#define CAUGHT_COLOR_INFO "\x1b[34m"               // ANSI blue
+#define CAUGHT_OUTPUT_BOLD "\x1b[1m"               // ANSI bold
+#define CAUGHT_OUTPUT_RESET "\x1b[0m"              // ANSI reset
 
 #define CAUGHT_OUTPUT_HEADER "==================================== Caught ====================================\n\n" \
                              "                    A lightweight & simple C testing library\n\n"                     \
@@ -38,11 +44,23 @@ void caught_output_success()
         return;
     printf("%s", CAUGHT_COLOR_SUCCESS);
 }
+void caught_output_background_success()
+{
+    if (!caught_color_enabled)
+        return;
+    printf("%s", CAUGHT_COLOR_BACKGROUND_SUCCESS);
+}
 void caught_output_fail()
 {
     if (!caught_color_enabled)
         return;
     printf("%s", CAUGHT_COLOR_FAIL);
+}
+void caught_output_background_fail()
+{
+    if (!caught_color_enabled)
+        return;
+    printf("%s", CAUGHT_COLOR_BACKGROUND_FAIL);
 }
 void caught_output_info()
 {
@@ -72,12 +90,59 @@ void caught_output_header()
     caught_output_reset();
 }
 
+void caught_output_internal_error(bool use_perror, char *fstr, va_list args)
+{
+    if (caught_color_enabled)
+    {
+        fprintf(stderr, "%s", CAUGHT_OUTPUT_BOLD CAUGHT_COLOR_BACKGROUND_FAIL CAUGHT_COLOR_FAIL);
+    }
+    fprintf(stderr, " %s ", "✖ ERROR");
+
+    if (caught_color_enabled)
+    {
+        fprintf(stderr, "%s ", CAUGHT_OUTPUT_RESET CAUGHT_COLOR_FAIL CAUGHT_OUTPUT_BOLD);
+    }
+
+    vfprintf(stderr, fstr, args);
+
+    if (use_perror && errno != 0)
+    {
+        fprintf(stderr, ": %s\n", strerror(errno));
+        errno = 0; // Reset errno after printing it
+    }
+
+    if (caught_color_enabled)
+    {
+        fprintf(stderr, "%s", CAUGHT_OUTPUT_RESET);
+    }
+
+    exit(EXIT_FAILURE);
+}
+
+void caught_output_perrorf(char *fstr, ...)
+{
+    va_list args;
+    va_start(args, fstr);
+    caught_output_internal_error(1, fstr, args);
+    va_end(args);
+}
+
+void caught_output_errorf(char *fstr, ...)
+{
+    va_list args;
+    va_start(args, fstr);
+    caught_output_internal_error(0, fstr, args);
+    va_end(args);
+}
+
 void caught_output_status_tag(int pass)
 {
     caught_output_bold();
     pass ? caught_output_success() : caught_output_fail();
-    printf("%s", pass ? "PASS " : "FAIL ");
+    pass ? caught_output_background_success() : caught_output_background_fail();
+    printf(caught_color_enabled ? " %s " : "%s", pass ? "PASS" : "FAIL");
     caught_output_reset();
+    printf(" ");
 }
 
 void caught_output_assertion_result(caught_internal_assertion_result assertion_result)

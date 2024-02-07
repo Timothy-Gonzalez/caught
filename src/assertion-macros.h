@@ -1,26 +1,10 @@
-#include <stdbool.h>
-
-#include "state.h"
-#include "config.h"
-#include "evaluators.h"
-#include "formatters.h"
-#include "fork.h"
-
 #ifndef CAUGHT_ASSERTIONS
 #define CAUGHT_ASSERTIONS
 
-typedef struct caught_internal_assertion_result
-{
-    const char *file;
-    const int line;
-    const char *expression;
-    char *lhs;
-    char *rhs;
-    enum caught_operator operator;
-    bool pass;
-} caught_internal_assertion_result;
-
-bool caught_internal_handle_assertion_result(caught_internal_assertion_result assertion_result);
+#include "assertion-result.h"
+#include "formatters.h"
+#include "evaluators.h"
+#include "state.h"
 
 // This is used by every expect define to handle taking lhs, op, rhs, & send them into their handlers.
 // These handlers then determine how to display (format) the passed data, and whether the assertion passed (comparators).

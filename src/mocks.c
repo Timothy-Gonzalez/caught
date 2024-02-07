@@ -5,21 +5,20 @@
 
 #include "mocks.h"
 #include "state.h"
+#include "output.h"
 
 void MOCK_STDOUT()
 {
     if (caught_internal_state.original_stdout != -1)
     {
-        perror("Caught: cannot mock already mocked stdout");
-        exit(EXIT_FAILURE);
+        caught_output_errorf("Cannot mock already mocked stdout");
     }
 
     int pipe_status = pipe(caught_internal_state.mocked_stdout_pipe);
 
     if (pipe_status == -1)
     {
-        perror("Caught: failed to create pipe for mocked stdout");
-        exit(EXIT_FAILURE);
+        caught_output_perrorf("Failed to create pipe for mocked stdout");
     }
 
     caught_internal_state.original_stdout = dup(STDOUT_FILENO);
@@ -28,14 +27,12 @@ void MOCK_STDOUT()
 
     if (caught_internal_state.original_stdout == -1)
     {
-        perror("Caught: failed to dup stdout before mocking stdout");
-        exit(EXIT_FAILURE);
+        caught_output_perrorf("Failed to dup stdout before mocking stdout");
     }
 
     if (dup2(caught_internal_state.mocked_stdout_pipe[1], STDOUT_FILENO) == -1)
     {
-        perror("Caught: failed to dup2 pipe to stdout");
-        exit(EXIT_FAILURE);
+        caught_output_perrorf("Failed to dup2 pipe to stdout");
     }
 }
 
@@ -43,8 +40,7 @@ char *RESTORE_STDOUT()
 {
     if (caught_internal_state.original_stdout == -1)
     {
-        perror("Caught: cannot restore mock not mocked stdout");
-        exit(EXIT_FAILURE);
+        caught_output_errorf("Cannot restore mock not mocked stdout");
     }
 
     fflush(NULL);
@@ -53,8 +49,7 @@ char *RESTORE_STDOUT()
 
     if (dup2(caught_internal_state.original_stdout, STDOUT_FILENO) == -1)
     {
-        perror("Caught: failed to restore stdout");
-        exit(EXIT_FAILURE);
+        caught_output_perrorf("Failed to restore stdout");
     }
 
     char *result = malloc(RESTORE_STDOUT_BUFFER_SIZE);
@@ -69,8 +64,7 @@ char *RESTORE_STDOUT()
 
         if (size == -1)
         {
-            perror("Caught: failed to read pipe");
-            exit(EXIT_FAILURE);
+            caught_output_perrorf("Failed to read pipe");
         }
 
         if (size == 0)

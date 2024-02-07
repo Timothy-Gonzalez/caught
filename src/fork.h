@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "output.h"
+
 typedef struct caught_internal_process_status
 {
     int type;               // 0 for exit status, 1 for signal status
@@ -31,16 +33,14 @@ caught_internal_process_status create_caught_internal_process_status(int type, i
     pid_t caught_internal_pid = fork();                                                        \
     if (caught_internal_pid == -1)                                                             \
     {                                                                                          \
-        perror("Caught: failed to fork\n");                                                    \
-        exit(EXIT_FAILURE);                                                                    \
+        caught_output_perrorf("Failed to fork\n");                                             \
     }                                                                                          \
     if (caught_internal_pid == 0)                                                              \
     {                                                                                          \
         caught_internal_cleanup_state();                                                       \
         child_execute_block                                                                    \
                                                                                                \
-            perror("Caught: fork segment must call exit to prevent fork bombs\n");             \
-        exit(EXIT_FAILURE);                                                                    \
+            caught_output_perrorf("Fork segment must call exit to prevent fork bombs\n");      \
     }                                                                                          \
     else                                                                                       \
     {                                                                                          \

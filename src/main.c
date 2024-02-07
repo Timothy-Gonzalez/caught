@@ -3,6 +3,7 @@
 #include "caught.h"
 #include "output.h"
 #include "config.h"
+#include "state.h"
 
 int main()
 {
@@ -23,8 +24,7 @@ int main()
 
         if (caught_internal_state.original_stdout != -1)
         {
-            perror("Caught: must restore stdout after mocking it, did you forget to call RESTORE_STDOUT()?");
-            exit(EXIT_FAILURE);
+            caught_output_errorf("Must restore stdout after mocking it, did you forget to call RESTORE_STDOUT()?");
         }
 
         int this_assertions = caught_internal_state.assertions - prev_assertions;

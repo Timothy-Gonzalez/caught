@@ -6,7 +6,7 @@
 #define CAUGHT_LIB
 
 #define _GNU_SOURCE // needed to make compiler happy, since this is the entrypoint
-#include "assertions.h"
+#include "assertion-macros.h"
 #include "mocks.h"
 #include "tests.h"
 
