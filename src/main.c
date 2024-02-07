@@ -12,17 +12,17 @@ int main()
     caught_output_header();
 
     int passed_tests = 0;
-    for (int i = 0; i < caught_internal.tests_num; ++i)
+    for (int i = 0; i < caught_internal_state.tests_num; ++i)
     {
-        int prev_assertions = caught_internal.assertions;
-        int prev_passed_assertions = caught_internal.passed_assertions;
+        int prev_assertions = caught_internal_state.assertions;
+        int prev_passed_assertions = caught_internal_state.passed_assertions;
 
-        caught_internal_test test = caught_internal.tests[i];
+        caught_internal_test test = caught_internal_state.tests[i];
 
         test.handler();
 
-        int this_assertions = caught_internal.assertions - prev_assertions;
-        int this_passed_assertions = caught_internal.passed_assertions - prev_passed_assertions;
+        int this_assertions = caught_internal_state.assertions - prev_assertions;
+        int this_passed_assertions = caught_internal_state.passed_assertions - prev_passed_assertions;
         int this_failed_assertions = this_assertions - this_passed_assertions;
 
         if (!this_failed_assertions)
@@ -43,17 +43,17 @@ int main()
         caught_output_test_summary(test.name, this_passed_assertions, this_failed_assertions);
     }
 
-    int tests = caught_internal.tests_num;
+    int tests = caught_internal_state.tests_num;
     int failed_tests = tests - passed_tests;
-    int passed_assertions = caught_internal.passed_assertions;
-    int failed_assertions = caught_internal.assertions - caught_internal.passed_assertions;
+    int passed_assertions = caught_internal_state.passed_assertions;
+    int failed_assertions = caught_internal_state.assertions - caught_internal_state.passed_assertions;
 
     printf("\n");
     caught_output_summary("Tests:      ", passed_tests, failed_tests);
     caught_output_summary("Assertions: ", passed_assertions, failed_assertions);
     caught_output_overall_result(failed_tests == 0);
 
-    free(caught_internal.tests);
+    free(caught_internal_state.tests);
 
     return failed_tests != 0;
 }
