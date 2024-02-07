@@ -21,6 +21,12 @@ int main()
 
         test.handler();
 
+        if (caught_internal_state.original_stdout != -1)
+        {
+            perror("Caught: must restore stdout after mocking it, did you forget to call RESTORE_STDOUT()?");
+            exit(EXIT_FAILURE);
+        }
+
         int this_assertions = caught_internal_state.assertions - prev_assertions;
         int this_passed_assertions = caught_internal_state.passed_assertions - prev_passed_assertions;
         int this_failed_assertions = this_assertions - this_passed_assertions;
