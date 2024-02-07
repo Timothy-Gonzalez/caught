@@ -36,6 +36,7 @@ caught_internal_process_status create_caught_internal_process_status(int type, i
     }                                                                                          \
     if (caught_internal_pid == 0)                                                              \
     {                                                                                          \
+        caught_internal_cleanup_state();                                                       \
         child_execute_block                                                                    \
                                                                                                \
             perror("Caught: fork segment must call exit to prevent fork bombs\n");             \

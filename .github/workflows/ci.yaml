@@ -47,8 +47,8 @@ jobs:
 
       - name: Run tests (valgrind)
         run: |
-          valgrind bin/tests-debug 2> valgrind_output.txt || true
+          valgrind bin/tests-debug 2> valgrind_output.txt 1>&2 || true
           cat valgrind_output.txt
-          if ! grep -q "All heap blocks were freed -- no leaks are possible" valgrind_output.txt; then
+          if ! tail -7 valgrind_output.txt | grep -q "All heap blocks were freed -- no leaks are possible" valgrind_output.txt; then
             exit 1; # exit if not found, we need this check because valgrind exit codes are bad
           fi
