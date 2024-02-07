@@ -59,7 +59,7 @@ int main()
     caught_output_summary("Assertions: ", passed_assertions, failed_assertions);
     caught_output_overall_result(failed_tests == 0);
 
-    free(caught_internal_state.tests);
+    caught_internal_cleanup_state();
 
     return failed_tests != 0;
 }
