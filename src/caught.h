@@ -7,6 +7,7 @@
 
 #define _GNU_SOURCE // needed to make compiler happy, since this is the entrypoint
 #include "assertions.h"
+#include "mocks.h"
 #include "tests.h"
 
 #endif

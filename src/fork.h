@@ -27,6 +27,7 @@ caught_internal_process_status create_caught_internal_process_status(int type, i
 
 #define CAUGHT_INTERNAL_FORK(child_execute_block)                                              \
     caught_internal_process_status caught_internal_fork_child_status = {};                     \
+    fflush(NULL);                                                                              \
     pid_t caught_internal_pid = fork();                                                        \
     if (caught_internal_pid == -1)                                                             \
     {                                                                                          \

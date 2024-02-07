@@ -1,5 +1,7 @@
 #include <stddef.h>
+
 #include "tests.h"
+
 #ifndef CAUGHT_STATE
 #define CAUGHT_STATE
 
@@ -12,6 +14,8 @@ struct caught_internal_t
     caught_internal_test *tests;
     int tests_num;
     int tests_capacity;
+    int mocked_stdout_pipe[2];
+    int original_stdout;
 };
 
 extern struct caught_internal_t caught_internal_state;
