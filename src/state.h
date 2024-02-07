@@ -14,6 +14,6 @@ struct caught_internal_t
     int tests_capacity;
 };
 
-extern struct caught_internal_t caught_internal;
+extern struct caught_internal_t caught_internal_state;
 
 #endif

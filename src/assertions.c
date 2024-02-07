@@ -8,10 +8,10 @@
 // Finally, returns true if assertion failed and test should exit
 bool caught_internal_handle_assertion_result(caught_internal_assertion_result assertion_result)
 {
-    caught_internal.assertions += 1;
+    caught_internal_state.assertions += 1;
     if (assertion_result.pass)
     {
-        caught_internal.passed_assertions += 1;
+        caught_internal_state.passed_assertions += 1;
     }
 
     int show_regardless_of_pass = 0;

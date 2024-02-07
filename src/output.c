@@ -68,7 +68,7 @@ void caught_output_header()
     printf("%s", CAUGHT_OUTPUT_HEADER);
     caught_output_bold();
     caught_output_info();
-    printf("\nLoaded %i tests\n", caught_internal.tests_num);
+    printf("\nLoaded %i tests\n", caught_internal_state.tests_num);
     caught_output_reset();
 }
 
