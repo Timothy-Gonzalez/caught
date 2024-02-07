@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include "output.h"
 
-#define CAUGHT_COLOR_SUCCESS "\x1b[32m" // ANSI green
-#define CAUGHT_COLOR_FAIL "\x1b[31m"    // ANSI red
-#define CAUGHT_COLOR_WARNING "\x1b[33m" // ANSI yellow
-#define CAUGHT_COLOR_INFO "\x1b[34m"    // ANSI blue
-#define CAUGHT_OUTPUT_BOLD "\x1b[1m"    // ANSI bold
-#define CAUGHT_OUTPUT_RESET "\x1b[0m"   // ANSI reset
+#define CAUGHT_COLOR_SUCCESS "\x1b[32m"            // ANSI green
+#define CAUGHT_COLOR_BACKGROUND_SUCCESS "\x1b[42m" // ANSI background green
+#define CAUGHT_COLOR_FAIL "\x1b[31m"               // ANSI red
+#define CAUGHT_COLOR_BACKGROUND_FAIL "\x1b[41m"    // ANSI background red
+#define CAUGHT_COLOR_WARNING "\x1b[33m"            // ANSI yellow
+#define CAUGHT_COLOR_INFO "\x1b[34m"               // ANSI blue
+#define CAUGHT_OUTPUT_BOLD "\x1b[1m"               // ANSI bold
+#define CAUGHT_OUTPUT_RESET "\x1b[0m"              // ANSI reset
 
 #define CAUGHT_OUTPUT_HEADER "==================================== Caught ====================================\n\n" \
                              "                    A lightweight & simple C testing library\n\n"                     \
@@ -38,11 +40,23 @@ void caught_output_success()
         return;
     printf("%s", CAUGHT_COLOR_SUCCESS);
 }
+void caught_output_background_success()
+{
+    if (!caught_color_enabled)
+        return;
+    printf("%s", CAUGHT_COLOR_BACKGROUND_SUCCESS);
+}
 void caught_output_fail()
 {
     if (!caught_color_enabled)
         return;
     printf("%s", CAUGHT_COLOR_FAIL);
+}
+void caught_output_background_fail()
+{
+    if (!caught_color_enabled)
+        return;
+    printf("%s", CAUGHT_COLOR_BACKGROUND_FAIL);
 }
 void caught_output_info()
 {
@@ -76,8 +90,10 @@ void caught_output_status_tag(int pass)
 {
     caught_output_bold();
     pass ? caught_output_success() : caught_output_fail();
-    printf("%s", pass ? "PASS " : "FAIL ");
+    pass ? caught_output_background_success() : caught_output_background_fail();
+    printf(caught_color_enabled ? " %s " : "%s", pass ? "PASS" : "FAIL");
     caught_output_reset();
+    printf(" ");
 }
 
 void caught_output_assertion_result(caught_internal_assertion_result assertion_result)

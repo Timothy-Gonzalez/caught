@@ -7,7 +7,9 @@
 void caught_internal_initialize_color_output();
 
 void caught_output_success();
+void caught_output_background_success();
 void caught_output_fail();
+void caught_output_background_fail();
 void caught_output_warning();
 void caught_output_info();
 void caught_output_bold();
