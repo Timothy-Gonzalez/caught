@@ -24,6 +24,8 @@ void MOCK_STDOUT()
 
     caught_internal_state.original_stdout = dup(STDOUT_FILENO);
 
+    fflush(NULL);
+
     if (caught_internal_state.original_stdout == -1)
     {
         perror("Caught: failed to dup stdout before mocking stdout");
@@ -44,6 +46,8 @@ char *RESTORE_STDOUT()
         perror("Caught: cannot restore mock not mocked stdout");
         exit(EXIT_FAILURE);
     }
+
+    fflush(NULL);
 
     close(caught_internal_state.mocked_stdout_pipe[1]);
 
