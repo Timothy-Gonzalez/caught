@@ -6,8 +6,9 @@ TEST("stdout - hello world")
 {
     MOCK_STDOUT();
     puts("Hello, world!");
-    char *stdout = RESTORE_STDOUT();
-    EXPECT_STR(stdout, ==, "Hello, world!\n");
+    char *out = RESTORE_STDOUT();
+    EXPECT_STR(out, ==, "Hello, world!\n");
+    free(out);
 }
 
 TEST("stdout - a lot of text")
@@ -17,6 +18,7 @@ TEST("stdout - a lot of text")
     puts("the universe,");
     puts("and everything,");
     puts("is 42.");
-    char *stdout = RESTORE_STDOUT();
-    EXPECT_STR(stdout, ==, "The answer to life,\nthe universe,\nand everything,\nis 42.\n");
+    char *out = RESTORE_STDOUT();
+    EXPECT_STR(out, ==, "The answer to life,\nthe universe,\nand everything,\nis 42.\n");
+    free(out);
 }
