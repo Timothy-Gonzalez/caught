@@ -37,6 +37,16 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "C: run tests valgrind",
+      "type": "shell",
+      "command": "valgrind --leak-check=full -s --show-leak-kinds=all ./bin/tests-debug",
+      "dependsOn": "C: make debug",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      }
     }
   ]
 }
