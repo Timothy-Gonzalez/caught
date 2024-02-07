@@ -35,7 +35,7 @@ char *caught_internal_formatter_int_ptr(int *value)
 
 char *caught_internal_formatter_char(char value)
 {
-    CAUGHT_INTERNAL_FORMATTER_FORMAT("%c", value)
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("'%c'", value)
 }
 char *caught_internal_formatter_char_ptr(char *value)
 {
@@ -46,7 +46,7 @@ char *caught_internal_formatter_char_ptr(char *value)
 char *caught_internal_formatter_str(char *value)
 {
     CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
-    CAUGHT_INTERNAL_FORMATTER_FORMAT("%s", value)
+    CAUGHT_INTERNAL_FORMATTER_FORMAT("\"%s\"", value)
 }
 char *caught_internal_formatter_str_ptr(char **value)
 {
