@@ -1,6 +1,10 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <stdarg.h>
+#include <errno.h>
 #include "output.h"
+#include "assertion-result.h"
+#include "state.h"
 
 #define CAUGHT_COLOR_SUCCESS "\x1b[32m"            // ANSI green
 #define CAUGHT_COLOR_BACKGROUND_SUCCESS "\x1b[42m" // ANSI background green
@@ -84,6 +88,51 @@ void caught_output_header()
     caught_output_info();
     printf("\nLoaded %i tests\n", caught_internal_state.tests_num);
     caught_output_reset();
+}
+
+void caught_output_internal_error(bool use_perror, char *fstr, va_list args)
+{
+    if (caught_color_enabled)
+    {
+        fprintf(stderr, "%s", CAUGHT_OUTPUT_BOLD CAUGHT_COLOR_BACKGROUND_FAIL CAUGHT_COLOR_FAIL);
+    }
+    fprintf(stderr, " %s ", "✖ ERROR");
+
+    if (caught_color_enabled)
+    {
+        fprintf(stderr, "%s ", CAUGHT_OUTPUT_RESET CAUGHT_COLOR_FAIL CAUGHT_OUTPUT_BOLD);
+    }
+
+    vfprintf(stderr, fstr, args);
+
+    if (use_perror && errno != 0)
+    {
+        fprintf(stderr, ": %s\n", strerror(errno));
+        errno = 0; // Reset errno after printing it
+    }
+
+    if (caught_color_enabled)
+    {
+        fprintf(stderr, "%s", CAUGHT_OUTPUT_RESET);
+    }
+
+    exit(EXIT_FAILURE);
+}
+
+void caught_output_perrorf(char *fstr, ...)
+{
+    va_list args;
+    va_start(args, fstr);
+    caught_output_internal_error(1, fstr, args);
+    va_end(args);
+}
+
+void caught_output_errorf(char *fstr, ...)
+{
+    va_list args;
+    va_start(args, fstr);
+    caught_output_internal_error(0, fstr, args);
+    va_end(args);
 }
 
 void caught_output_status_tag(int pass)
