@@ -14,7 +14,7 @@ BIN_DIR = bin
 C_FILES := $(shell find $(SRC_DIR) $(TEST_DIR) -name '*.c')
 H_FILES := $(shell find $(SRC_DIR) $(TEST_DIR) -name '*.h')
 
-.PHONY: all tests clean amalgamate
+.PHONY: all tests clean amalgamate bump-version
 
 all: tests debug amalgamate
 debug: bin/tests-debug bin/tests-amalgamate-debug
@@ -26,6 +26,9 @@ amalgamate:
 	mkdir -p ./amalgamate/test/src/
 	cp ./amalgamate/caught.h ./amalgamate/caught.c ./amalgamate/test/src/
 	cp -r ./tests ./amalgamate/test/
+
+bump-version:
+	(which python > /dev/null && python tools/bump-version.py) || (which python3 > /dev/null && python3 tools/bump-version.py)
 
 $(BIN_DIR)/tests-debug: $(C_FILES) $(H_FILES)
 	@mkdir -p $(BIN_DIR)
