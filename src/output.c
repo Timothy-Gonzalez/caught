@@ -94,6 +94,7 @@ void caught_output_header()
         putchar('=');
 
     printf("%s", header_text);
+    free(header_text);
 
     for (; rightEquals > 0; rightEquals--)
         putchar('=');
