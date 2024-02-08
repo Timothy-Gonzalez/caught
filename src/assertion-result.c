@@ -3,6 +3,7 @@
 
 #include "output.h"
 #include "state.h"
+#include "config.h"
 
 // General purpose converter from string (==) to operator enum (CAUGHT_OP_EQUAL)
 enum caught_operator
