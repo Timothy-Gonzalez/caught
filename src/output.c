@@ -5,6 +5,7 @@
 #include "output.h"
 #include "assertion-result.h"
 #include "state.h"
+#include "caught.h"
 
 #define CAUGHT_COLOR_SUCCESS "\x1b[32m"            // ANSI green
 #define CAUGHT_COLOR_BACKGROUND_SUCCESS "\x1b[42m" // ANSI background green
@@ -15,10 +16,10 @@
 #define CAUGHT_OUTPUT_BOLD "\x1b[1m"               // ANSI bold
 #define CAUGHT_OUTPUT_RESET "\x1b[0m"              // ANSI reset
 
-#define CAUGHT_OUTPUT_HEADER "==================================== Caught ====================================\n\n" \
-                             "                    A lightweight & simple C testing library\n\n"                     \
-                             "                      Copyright(c) 2024 Timothy Gonzalez\n\n"                         \
-                             "================================================================================\n"
+#define CAUGHT_OUTPUT_HEADER_WIDTH 80
+#define CAUGHT_OUTPUT_HEADER_BOTTOM "                    A lightweight & simple C testing library\n\n" \
+                                    "                      Copyright(c) 2024 Timothy Gonzalez\n\n"     \
+                                    "================================================================================\n"
 
 int caught_color_enabled = 0;
 
@@ -83,7 +84,21 @@ void caught_output_reset()
 
 void caught_output_header()
 {
-    printf("%s", CAUGHT_OUTPUT_HEADER);
+    char *header_text;
+    asprintf(&header_text, " Caught %s ", CAUGHT_VERSION_STRING);
+    int equalsLeft = CAUGHT_OUTPUT_HEADER_WIDTH - strlen(header_text);
+    int leftEquals = equalsLeft / 2;
+    int rightEquals = equalsLeft - leftEquals;
+
+    for (; leftEquals > 0; leftEquals--)
+        putchar('=');
+
+    printf("%s", header_text);
+
+    for (; rightEquals > 0; rightEquals--)
+        putchar('=');
+
+    printf("\n\n%s", CAUGHT_OUTPUT_HEADER_BOTTOM);
     caught_output_bold();
     caught_output_info();
     printf("\nLoaded %i tests\n", caught_internal_state.tests_num);
