@@ -44,3 +44,20 @@ TEST("bool - ptrs")
     EXPECT_BOOL_PTR(&the_lie, <=, &the_truth);
     EXPECT_BOOL_PTR(&the_lie, <=, &the_other_lie);
 }
+
+TEST("bool - arrays")
+{
+    bool array[] = {false, false, false};
+    bool array2[] = {false, false, false};
+    bool array3[] = {true, true, true};
+
+    EXPECT_BOOL_ARRAY(array, ==, array2, 3);
+    EXPECT_BOOL_ARRAY(array, >=, array2, 3);
+    EXPECT_BOOL_ARRAY(array, <=, array2, 3);
+    array[2] = true;
+    EXPECT_BOOL_ARRAY(array, !=, array2, 3);
+    EXPECT_BOOL_ARRAY(array, ==, array2, 2);
+
+    EXPECT_BOOL_ARRAY(array2, <, array3, 3);
+    EXPECT_BOOL_ARRAY(array3, >, array2, 3);
+}

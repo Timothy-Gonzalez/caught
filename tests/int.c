@@ -2,6 +2,25 @@
 // For example, it could be: #include "caught.h"
 #include "../src/caught.h"
 
+int factorial(n)
+{
+    if (n <= 1)
+    {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+TEST("int - factorial")
+{
+    EXPECT_INT(1, ==, factorial(1));
+    EXPECT_INT(2, ==, factorial(2));
+    EXPECT_INT(6, ==, factorial(3));
+    EXPECT_INT(24, ==, factorial(4));
+    EXPECT_INT(120, ==, factorial(5));
+    EXPECT_INT(720, ==, factorial(6));
+}
+
 TEST("int - simple math")
 {
     EXPECT_INT(2, ==, 1 + 1);
@@ -38,21 +57,19 @@ TEST("int - ptrs")
     EXPECT_INT_PTR(array, <=, array);
 }
 
-int factorial(n)
+TEST("int - arrays")
 {
-    if (n <= 1)
-    {
-        return 1;
-    }
-    return n * factorial(n - 1);
-}
+    int array[] = {1, 2, 3, 4};
+    int array2[] = {1, 2, 3, 4};
+    int array3[] = {2, 3, 4, 5};
 
-TEST("int - factorial")
-{
-    EXPECT_INT(1, ==, factorial(1));
-    EXPECT_INT(2, ==, factorial(2));
-    EXPECT_INT(6, ==, factorial(3));
-    EXPECT_INT(24, ==, factorial(4));
-    EXPECT_INT(120, ==, factorial(5));
-    EXPECT_INT(720, ==, factorial(6));
+    EXPECT_INT_ARRAY(array, ==, array2, 4);
+    EXPECT_INT_ARRAY(array, >=, array2, 4);
+    EXPECT_INT_ARRAY(array, <=, array2, 4);
+    array[3] = -1;
+    EXPECT_INT_ARRAY(array, !=, array2, 4);
+    EXPECT_INT_ARRAY(array, ==, array2, 3);
+
+    EXPECT_INT_ARRAY(array2, <, array3, 4);
+    EXPECT_INT_ARRAY(array3, >, array2, 4);
 }

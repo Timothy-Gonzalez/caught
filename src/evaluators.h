@@ -8,18 +8,23 @@
 
 bool caught_internal_evaluator_ptr(void *lhs, enum caught_operator operator, void * rhs);
 bool caught_internal_evaluator_ptr_ptr(void **lhs, enum caught_operator operator, void ** rhs);
+bool caught_internal_evaluator_ptr_array(void **lhs, enum caught_operator operator, void ** rhs, ssize_t length);
 
 bool caught_internal_evaluator_bool(bool lhs, enum caught_operator operator, bool rhs);
 bool caught_internal_evaluator_bool_ptr(bool *lhs, enum caught_operator operator, bool * rhs);
+bool caught_internal_evaluator_bool_array(bool *lhs, enum caught_operator operator, bool * rhs, ssize_t length);
 
 bool caught_internal_evaluator_int(int lhs, enum caught_operator operator, int rhs);
 bool caught_internal_evaluator_int_ptr(int *lhs, enum caught_operator operator, int * rhs);
+bool caught_internal_evaluator_int_array(int *lhs, enum caught_operator operator, int * rhs, ssize_t length);
 
 bool caught_internal_evaluator_char(char lhs, enum caught_operator operator, char rhs);
 bool caught_internal_evaluator_char_ptr(char *lhs, enum caught_operator operator, char * rhs);
+bool caught_internal_evaluator_char_array(char *lhs, enum caught_operator operator, char * rhs, ssize_t length);
 
 bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, char * rhs);
 bool caught_internal_evaluator_str_ptr(char **lhs, enum caught_operator operator, char ** rhs);
+bool caught_internal_evaluator_str_array(char **lhs, enum caught_operator operator, char ** rhs, ssize_t length);
 
 bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, enum caught_operator operator, caught_internal_process_status rhs);
 
@@ -51,5 +56,40 @@ bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, e
         bool equal_operator = (operator== CAUGHT_OP_EQUAL) || (operator== CAUGHT_OP_GREATER_THAN_EQ) || (operator== CAUGHT_OP_LESS_THAN_EQ); \
         return (equal && equal_operator) || (!equal && !equal_operator);                                                                     \
     }
+
+// Uses evaluator on each element of array
+#define CAUGHT_GENERATE_EVALUATOR_ARRAY(lhs_exp, op_exp, rhs_exp, length, evaluator) \
+    if (length <= 0)                                                                 \
+    {                                                                                \
+        caught_output_errorf("Invalid length of array: %lu", length);                \
+    }                                                                                \
+    bool pass_all = true;                                                            \
+    bool pass_any = false;                                                           \
+    int i;                                                                           \
+    for (i = 0; i < length; ++i)                                                     \
+    {                                                                                \
+        bool pass = evaluator(lhs_exp[i], op_exp, rhs_exp[i]);                       \
+        if (pass)                                                                    \
+        {                                                                            \
+            pass_any = true;                                                         \
+        }                                                                            \
+        else                                                                         \
+        {                                                                            \
+            pass_all = false;                                                        \
+        }                                                                            \
+    }                                                                                \
+    bool pass_any_op = (op_exp == CAUGHT_OP_NOT_EQUAL);                              \
+    return (!pass_any_op && pass_all) || (pass_any_op && pass_any);
+
+#define CAUGHT_GENERATE_EVALUATOR_ARRAY_ALLOW_NULL_TERMINATOR(lhs, op, rhs, length, evaluator, terminator) \
+    if (length < 0)                                                                                        \
+    {                                                                                                      \
+        length = -1;                                                                                       \
+        do                                                                                                 \
+        {                                                                                                  \
+            length += 1;                                                                                   \
+        } while (rhs[length] != terminator);                                                               \
+    }                                                                                                      \
+    CAUGHT_GENERATE_EVALUATOR_ARRAY(lhs, op, rhs, length, evaluator)
 
 #endif

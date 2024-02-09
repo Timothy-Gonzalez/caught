@@ -3,6 +3,12 @@
 #include "../src/caught.h"
 #include <string.h>
 
+TEST("str - strstr")
+{
+    char *str = "a long string that can be indexed";
+    EXPECT_STR("be indexed", ==, strstr(str, "be"));
+}
+
 TEST("str - basic")
 {
     EXPECT_STR("abc", ==, "abc");
@@ -25,8 +31,19 @@ TEST("str - ptrs")
     EXPECT_STR_PTR(NULL, !=, array + 2);
 }
 
-TEST("str - strstr")
+TEST("str - arrays")
 {
-    char *str = "a long string that can be indexed";
-    EXPECT_STR("be indexed", ==, strstr(str, "be"));
+    char *null_terminated[] = {"abc", "def", NULL};
+    char *null_terminated2[] = {"abc", "def", NULL};
+    char *array[] = {"123", "456", "789"};
+    char *array2[] = {"123", "456", "789"};
+
+    EXPECT_STR_ARRAY(null_terminated, ==, null_terminated2, -1);
+    null_terminated[1] = "fed";
+    EXPECT_STR_ARRAY(null_terminated, !=, null_terminated2, -1);
+
+    EXPECT_STR_ARRAY(array, ==, array2, 3);
+    array[2] = "000";
+    EXPECT_STR_ARRAY(array, !=, array2, 3);
+    EXPECT_STR_ARRAY(array, ==, array2, 2);
 }

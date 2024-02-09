@@ -37,3 +37,20 @@ TEST("ptr - ptr")
     EXPECT_PTR_PTR(&one, <=, &two);
     EXPECT_PTR_PTR(&one, <=, &one);
 }
+
+TEST("ptr - arrays")
+{
+    void *array[] = {(void *)0x1, (void *)0x2, (void *)0x3};
+    void *array2[] = {(void *)0x1, (void *)0x2, (void *)0x3};
+    void *array3[] = {(void *)0x2, (void *)0x3, (void *)0x4};
+
+    EXPECT_PTR_ARRAY(array, ==, array2, 3);
+    EXPECT_PTR_ARRAY(array, >=, array2, 3);
+    EXPECT_PTR_ARRAY(array, <=, array2, 3);
+    array[2] = (void *)0x99;
+    EXPECT_PTR_ARRAY(array, !=, array2, 3);
+    EXPECT_PTR_ARRAY(array, ==, array2, 2);
+
+    EXPECT_PTR_ARRAY(array2, <, array3, 3);
+    EXPECT_PTR_ARRAY(array3, >, array2, 3);
+}
