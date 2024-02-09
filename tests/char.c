@@ -4,6 +4,12 @@
 
 #include <string.h>
 
+TEST("char - strstr")
+{
+    EXPECT_CHAR('a', ==, *strchr("what a day", 'a'));
+    EXPECT_CHAR('d', ==, *strchr("what a day", 'd'));
+}
+
 TEST("char - basic")
 {
     EXPECT_CHAR('a', ==, 'a');
@@ -39,8 +45,27 @@ TEST("char - ptrs")
     EXPECT_CHAR_PTR(array, >=, array);
 }
 
-TEST("char - strstr")
+TEST("char - arrays")
 {
-    EXPECT_CHAR('a', ==, *strchr("what a day", 'a'));
-    EXPECT_CHAR('d', ==, *strchr("what a day", 'd'));
+    char array[] = {'a', 'b', 'c'};
+    char array2[] = {'a', 'b', 'c'};
+    char array3[] = {'b', 'c', 'd'};
+
+    EXPECT_CHAR_ARRAY(array, ==, array2, 3);
+    EXPECT_CHAR_ARRAY(array, >=, array2, 3);
+    EXPECT_CHAR_ARRAY(array, <=, array2, 3);
+    array[2] = 'w';
+    EXPECT_CHAR_ARRAY(array, !=, array2, 3);
+    EXPECT_CHAR_ARRAY(array, ==, array2, 2);
+
+    EXPECT_CHAR_ARRAY(array2, <, array3, 3);
+    EXPECT_CHAR_ARRAY(array3, >, array2, 3);
+
+    // Can also use c-strings, though recommended to just use EXPECT_STR methods instead
+    // only benefit of this is getting explicit output of each character
+    char string[] = "xyz";
+    char string2[] = "xyz";
+    EXPECT_CHAR_ARRAY(string, ==, string2, -1);
+    string[2] = 'w';
+    EXPECT_CHAR_ARRAY(string, !=, string2, -1);
 }
