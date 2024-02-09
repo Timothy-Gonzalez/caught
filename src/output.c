@@ -163,6 +163,10 @@ void caught_output_status_tag(int pass)
 
 void caught_output_assertion_result(caught_internal_assertion_result assertion_result)
 {
+    if (assertion_result.lhs == NULL || assertion_result.rhs == NULL)
+    {
+        caught_output_errorf("%s cannot be null", assertion_result.lhs == NULL ? "lhs" : "rhs");
+    }
     printf("\n");
 
     caught_output_status_tag(assertion_result.pass);
@@ -177,11 +181,11 @@ void caught_output_assertion_result(caught_internal_assertion_result assertion_r
 
     printf("        %s:%*s ", expected_statement, statement_padding - (int)strlen(expected_statement), "");
     caught_output_success();
-    printf("%s", assertion_result.lhs == NULL ? "NULL" : assertion_result.lhs);
+    printf("%s", assertion_result.lhs);
     caught_output_reset();
     printf("\n        %s:%*s ", to_be_statement, statement_padding - (int)strlen(to_be_statement), "");
     assertion_result.pass ? caught_output_success() : caught_output_fail();
-    printf("%s", assertion_result.rhs == NULL ? "NULL" : assertion_result.rhs);
+    printf("%s", assertion_result.rhs);
     caught_output_reset();
     printf("\n");
 }

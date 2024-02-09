@@ -33,7 +33,7 @@ char *caught_internal_formatter_exit_status(caught_internal_process_status value
 #define CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value) \
     if (value == NULL)                              \
     {                                               \
-        return NULL;                                \
+        return strdup("NULL");                      \
     }
 
 #endif
