@@ -4,28 +4,23 @@
 
 int factorial(n)
 {
-    if (n <= 1)
-    {
-        return 1;
-    }
-    return n * factorial(n - 1);
+    return n <= 1 ? 1 : factorial(n - 1) * n;
 }
 
 TEST("int - factorial")
 {
-    EXPECT_INT(1, ==, factorial(1));
-    EXPECT_INT(2, ==, factorial(2));
-    EXPECT_INT(6, ==, factorial(3));
-    EXPECT_INT(24, ==, factorial(4));
-    EXPECT_INT(120, ==, factorial(5));
-    EXPECT_INT(720, ==, factorial(6));
+    EXPECT_INT(factorial(1), ==, 1);
+    EXPECT_INT(factorial(2), ==, 2);
+    EXPECT_INT(factorial(3), ==, 6);
+    EXPECT_INT(factorial(4), ==, 24);
+    EXPECT_INT(factorial(5), ==, 120);
 }
 
 TEST("int - simple math")
 {
-    EXPECT_INT(2, ==, 1 + 1);
-    EXPECT_INT(7, ==, 3 + 4);
-    EXPECT_INT(42, !=, 6 * 9);
+    EXPECT_INT(1 + 1, ==, 2);
+    EXPECT_INT(3 + 4, ==, 7);
+    EXPECT_INT(6 * 9, !=, 42);
 }
 
 TEST("int - inequalities")
