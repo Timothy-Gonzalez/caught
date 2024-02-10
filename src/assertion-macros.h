@@ -49,12 +49,25 @@
                                       formatter(caught_internal_rhs, caught_internal_array_length))                                          \
     } while (0);
 
+// Convience mapping for passing length as argument, lhs is the element, rhs is the array
+#define CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(func_postfix, type_lhs, type_rhs, lhs, op, rhs, length_exp, evaluator, formatter_lhs, formatter_rhs) \
+    do                                                                                                                                                   \
+    {                                                                                                                                                    \
+        size_t caught_internal_array_length = length_exp;                                                                                                \
+        CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_lhs, type_rhs, lhs, op, rhs,                                                                    \
+                                      evaluator(&caught_internal_lhs, caught_internal_op, caught_internal_rhs, caught_internal_array_length),            \
+                                      formatter_lhs(caught_internal_lhs),                                                                                \
+                                      formatter_rhs(caught_internal_rhs, caught_internal_array_length))                                                  \
+    } while (0);
+
 #define EXPECT_PTR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(PTR, void *, lhs, op, rhs, caught_internal_evaluator_ptr, caught_internal_formatter_ptr)
 #define EXPECT_PTR_PTR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(PTR_PTR, void **, lhs, op, rhs, caught_internal_evaluator_ptr_ptr, caught_internal_formatter_ptr_ptr)
 #define EXPECT_PTR_ARRAY(lhs, op, rhs, length) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY(PTR_ARRAY, void **, lhs, op, rhs, length, caught_internal_evaluator_ptr_array, caught_internal_formatter_ptr_array)
+#define EXPECT_PTR_ARRAY_ELEMENT(lhs, op, rhs, length) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(PTR_ARRAY_ELEMENT, void *, void **, lhs, op, rhs, length, caught_internal_evaluator_ptr_array, caught_internal_formatter_ptr, caught_internal_formatter_ptr_array)
 
 #define EXPECT_BOOL(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(BOOL, bool, lhs, op, rhs, caught_internal_evaluator_bool, caught_internal_formatter_bool)
@@ -62,6 +75,8 @@
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(BOOL_PTR, bool *, lhs, op, rhs, caught_internal_evaluator_bool_ptr, caught_internal_formatter_bool_ptr)
 #define EXPECT_BOOL_ARRAY(lhs, op, rhs, length) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY(BOOL_ARRAY, bool *, lhs, op, rhs, length, caught_internal_evaluator_bool_array, caught_internal_formatter_bool_array)
+#define EXPECT_BOOL_ARRAY_ELEMENT(lhs, op, rhs, length) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(BOOL_ARRAY_ELEMENT, bool, bool *, lhs, op, rhs, length, caught_internal_evaluator_bool_array, caught_internal_formatter_bool, caught_internal_formatter_bool_array)
 
 #define EXPECT_INT(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(INT, int, lhs, op, rhs, caught_internal_evaluator_int, caught_internal_formatter_int)
@@ -69,6 +84,8 @@
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(INT_PTR, int *, lhs, op, rhs, caught_internal_evaluator_int_ptr, caught_internal_formatter_int_ptr)
 #define EXPECT_INT_ARRAY(lhs, op, rhs, length) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY(INT_ARRAY, int *, lhs, op, rhs, length, caught_internal_evaluator_int_array, caught_internal_formatter_int_array)
+#define EXPECT_INT_ARRAY_ELEMENT(lhs, op, rhs, length) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(INT_ARRAY_ELEMENT, int, int *, lhs, op, rhs, length, caught_internal_evaluator_int_array, caught_internal_formatter_int, caught_internal_formatter_int_array)
 
 #define EXPECT_CHAR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(CHAR, char, lhs, op, rhs, caught_internal_evaluator_char, caught_internal_formatter_char)
@@ -76,6 +93,8 @@
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(CHAR_PTR, char *, lhs, op, rhs, caught_internal_evaluator_char_ptr, caught_internal_formatter_char_ptr)
 #define EXPECT_CHAR_ARRAY(lhs, op, rhs, length) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY(CHAR_ARRAY, char *, lhs, op, rhs, length, caught_internal_evaluator_char_array, caught_internal_formatter_char_array)
+#define EXPECT_CHAR_ARRAY_ELEMENT(lhs, op, rhs, length) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(CHAR_ARRAY_ELEMENT, char, char *, lhs, op, rhs, length, caught_internal_evaluator_char_array, caught_internal_formatter_char, caught_internal_formatter_char_array)
 
 #define EXPECT_STR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(STR, char *, lhs, op, rhs, caught_internal_evaluator_str, caught_internal_formatter_str)
@@ -83,6 +102,8 @@
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(STR_PTR, char **, lhs, op, rhs, caught_internal_evaluator_str_ptr, caught_internal_formatter_str_ptr)
 #define EXPECT_STR_ARRAY(lhs, op, rhs, length) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY(STR_ARRAY, char **, lhs, op, rhs, length, caught_internal_evaluator_str_array, caught_internal_formatter_str_array)
+#define EXPECT_STR_ARRAY_ELEMENT(lhs, op, rhs, length) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(STR_ARRAY_ELEMENT, char *, char **, lhs, op, rhs, length, caught_internal_evaluator_str_array, caught_internal_formatter_str, caught_internal_formatter_str_array)
 
 #define CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(func_name, expected_status, execute_block)                                                       \
     do                                                                                                                                           \
