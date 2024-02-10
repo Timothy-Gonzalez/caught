@@ -24,6 +24,6 @@ struct caught_internal_t
 
 extern struct caught_internal_t caught_internal_state;
 
-void caught_internal_cleanup_state();
+void caught_internal_cleanup_state(bool exiting);
 
 #endif

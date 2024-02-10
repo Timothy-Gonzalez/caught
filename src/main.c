@@ -59,7 +59,7 @@ int main()
     caught_output_summary("Assertions: ", passed_assertions, failed_assertions);
     caught_output_overall_result(failed_tests == 0);
 
-    caught_internal_cleanup_state();
+    caught_internal_cleanup_state(true);
 
     return failed_tests != 0;
 }
