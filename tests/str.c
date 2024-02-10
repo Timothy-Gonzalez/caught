@@ -17,6 +17,15 @@ TEST("str - basic")
     EXPECT_STR("one string", !=, "other");
 }
 
+TEST("str - in")
+{
+    EXPECT_STR("abc", in, "abcdefghijk");
+    EXPECT_STR("123", in, "12121232141246");
+
+    EXPECT_STR("abc", not in, "bcdefghijk");
+    EXPECT_STR("123", not in, "12121223141246");
+}
+
 TEST("str - ptrs")
 {
     char *array[] = {"abc", "def", NULL};
@@ -46,4 +55,20 @@ TEST("str - arrays")
     array[2] = "000";
     EXPECT_STR_ARRAY(array, !=, array2, 3);
     EXPECT_STR_ARRAY(array, ==, array2, 2);
+}
+
+TEST("str - array in")
+{
+    char *array[] = {"123", "456", "789"};
+
+    EXPECT_STR_ARRAY_ELEMENT("123", in, array, 3);
+    EXPECT_STR_ARRAY_ELEMENT("456", in, array, 3);
+
+    EXPECT_STR_ARRAY_ELEMENT("346", not in, array, 3);
+    EXPECT_STR_ARRAY_ELEMENT("789", not in, array, 2);
+
+    char *null_terminated[] = {"abc", "def", NULL};
+
+    EXPECT_STR_ARRAY_ELEMENT("abc", in, null_terminated, -1);
+    EXPECT_STR_ARRAY_ELEMENT("wxy", not in, null_terminated, -1);
 }

@@ -5,6 +5,7 @@
 
 char *caught_internal_formatter_ptr(void *value)
 {
+    CAUGHT_INTERNAL_FORMATTER_NULL_GUARD(value)
     CAUGHT_INTERNAL_FORMATTER_FORMAT("%p", value);
 }
 char *caught_internal_formatter_ptr_ptr(void **value)
@@ -50,6 +51,10 @@ char *caught_internal_formatter_int_array(int *value, ssize_t length)
 
 char *caught_internal_formatter_char(char value)
 {
+    if (value == '\0')
+    {
+        return strdup("'\\0'");
+    }
     CAUGHT_INTERNAL_FORMATTER_FORMAT("'%c'", value)
 }
 char *caught_internal_formatter_char_ptr(char *value)

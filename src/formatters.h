@@ -89,6 +89,7 @@ char *caught_internal_formatter_exit_status(caught_internal_process_status value
         {                                                                                                     \
             array_length += 1;                                                                                \
         } while (array_exp[array_length] != terminator);                                                      \
+        array_length += 1; /* Include terminator */                                                           \
     }                                                                                                         \
     CAUGHT_INTERNAL_FORMATTER_ARRAY(array_exp, array_length, formatter)
 

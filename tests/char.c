@@ -69,3 +69,19 @@ TEST("char - arrays")
     string[2] = 'w';
     EXPECT_CHAR_ARRAY(string, !=, string2, -1);
 }
+
+TEST("char - in")
+{
+    char array[] = {'a', 'b', 'c'};
+
+    EXPECT_CHAR_ARRAY_ELEMENT('a', in, array, 3);
+    EXPECT_CHAR_ARRAY_ELEMENT('b', in, array, 3);
+
+    EXPECT_CHAR_ARRAY_ELEMENT('w', not in, array, 3);
+    EXPECT_CHAR_ARRAY_ELEMENT('c', not in, array, 2);
+
+    char *cstr = "axy"; // This works because cstrs are '\0' terminated
+
+    EXPECT_CHAR_ARRAY_ELEMENT('a', in, cstr, -1);
+    EXPECT_CHAR_ARRAY_ELEMENT('z', not in, cstr, -1);
+}

@@ -61,3 +61,15 @@ TEST("bool - arrays")
     EXPECT_BOOL_ARRAY(array2, <, array3, 3);
     EXPECT_BOOL_ARRAY(array3, >, array2, 3);
 }
+
+TEST("bool - in")
+{
+    bool array[] = {false, false, true};
+    bool array2[] = {false, false, false};
+
+    EXPECT_BOOL_ARRAY_ELEMENT(false, in, array, 3);
+    EXPECT_BOOL_ARRAY_ELEMENT(true, in, array, 3);
+
+    EXPECT_BOOL_ARRAY_ELEMENT(true, not in, array2, 3);
+    EXPECT_BOOL_ARRAY_ELEMENT(true, not in, array, 2);
+}

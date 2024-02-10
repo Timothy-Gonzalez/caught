@@ -77,6 +77,10 @@ bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, cha
         return (null_exists && lhs == rhs) || (!null_exists && strcmp(lhs, rhs) == 0);
     case CAUGHT_OP_NOT_EQUAL:
         return (null_exists && lhs != rhs) || (!null_exists && strcmp(lhs, rhs) != 0);
+    case CAUGHT_OP_IN:
+        return !null_exists && (strstr(rhs, lhs) != NULL);
+    case CAUGHT_OP_NOT_IN:
+        return null_exists || (strstr(rhs, lhs) == NULL);
     default:
         caught_output_errorf("Cannot compare strings with %s, only == and != are supported!", caught_operator_to_str(operator));
         return false;

@@ -11,6 +11,8 @@ enum caught_operator
     CAUGHT_OP_GREATER_THAN,
     CAUGHT_OP_LESS_THAN_EQ,
     CAUGHT_OP_GREATER_THAN_EQ,
+    CAUGHT_OP_IN,
+    CAUGHT_OP_NOT_IN,
 };
 
 static char *CAUGHT_OPERATOR_STRS[] = {
@@ -20,6 +22,8 @@ static char *CAUGHT_OPERATOR_STRS[] = {
     ">",
     "<=",
     ">=",
+    "in",
+    "not in",
 };
 
 static char *CAUGHT_OPERATOR_TO_BES[] = {
@@ -29,6 +33,8 @@ static char *CAUGHT_OPERATOR_TO_BES[] = {
     "to be greater than",
     "to be <= to",
     "to be >= to",
+    "to be in",
+    "to not be in",
 };
 
 enum caught_operator

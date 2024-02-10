@@ -29,23 +29,24 @@ bool caught_internal_evaluator_str_array(char **lhs, enum caught_operator operat
 bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, enum caught_operator operator, caught_internal_process_status rhs);
 
 // Uses default operators (==, <=, >=, ...) to compare lhs to rhs
-#define CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs) \
-    switch (operator)                                         \
-    {                                                         \
-    case CAUGHT_OP_EQUAL:                                     \
-        return lhs == rhs;                                    \
-    case CAUGHT_OP_NOT_EQUAL:                                 \
-        return lhs != rhs;                                    \
-    case CAUGHT_OP_LESS_THAN:                                 \
-        return lhs < rhs;                                     \
-    case CAUGHT_OP_GREATER_THAN:                              \
-        return lhs > rhs;                                     \
-    case CAUGHT_OP_LESS_THAN_EQ:                              \
-        return lhs <= rhs;                                    \
-    case CAUGHT_OP_GREATER_THAN_EQ:                           \
-        return lhs >= rhs;                                    \
-    default:                                                  \
-        return false;                                         \
+#define CAUGHT_GENERATE_GENERIC_EVALUATOR(lhs, operator, rhs)                          \
+    switch (operator)                                                                  \
+    {                                                                                  \
+    case CAUGHT_OP_EQUAL:                                                              \
+        return lhs == rhs;                                                             \
+    case CAUGHT_OP_NOT_EQUAL:                                                          \
+        return lhs != rhs;                                                             \
+    case CAUGHT_OP_LESS_THAN:                                                          \
+        return lhs < rhs;                                                              \
+    case CAUGHT_OP_GREATER_THAN:                                                       \
+        return lhs > rhs;                                                              \
+    case CAUGHT_OP_LESS_THAN_EQ:                                                       \
+        return lhs <= rhs;                                                             \
+    case CAUGHT_OP_GREATER_THAN_EQ:                                                    \
+        return lhs >= rhs;                                                             \
+    default:                                                                           \
+        caught_output_errorf("Invalid operator %s", caught_operator_to_str(operator)); \
+        return false;                                                                  \
     }
 
 // If lhs or rhs in null, return the expected result for that operator
@@ -58,27 +59,37 @@ bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, e
     }
 
 // Uses evaluator on each element of array
-#define CAUGHT_GENERATE_EVALUATOR_ARRAY(lhs_exp, op_exp, rhs_exp, length, evaluator) \
-    if (length <= 0)                                                                 \
-    {                                                                                \
-        caught_output_errorf("Invalid length of array: %lu", length);                \
-    }                                                                                \
-    bool pass_all = true;                                                            \
-    bool pass_any = false;                                                           \
-    int i;                                                                           \
-    for (i = 0; i < length; ++i)                                                     \
-    {                                                                                \
-        bool pass = evaluator(lhs_exp[i], op_exp, rhs_exp[i]);                       \
-        if (pass)                                                                    \
-        {                                                                            \
-            pass_any = true;                                                         \
-        }                                                                            \
-        else                                                                         \
-        {                                                                            \
-            pass_all = false;                                                        \
-        }                                                                            \
-    }                                                                                \
-    bool pass_any_op = (op_exp == CAUGHT_OP_NOT_EQUAL);                              \
+#define CAUGHT_GENERATE_EVALUATOR_ARRAY(lhs_exp, op_exp, rhs_exp, length, evaluator)                                \
+    if (length <= 0)                                                                                                \
+    {                                                                                                               \
+        caught_output_errorf("Invalid length of array: %lu", length);                                               \
+    }                                                                                                               \
+    bool pass_all = true;                                                                                           \
+    bool pass_any = false;                                                                                          \
+    bool in_op = (op_exp == CAUGHT_OP_IN || op_exp == CAUGHT_OP_NOT_IN);                                            \
+    bool pass_any_op = (op_exp == CAUGHT_OP_NOT_EQUAL || op_exp == CAUGHT_OP_IN);                                   \
+    int i;                                                                                                          \
+    for (i = 0; i < length; ++i)                                                                                    \
+    {                                                                                                               \
+        bool pass;                                                                                                  \
+        if (!in_op)                                                                                                 \
+        {                                                                                                           \
+            pass = evaluator(lhs_exp[i], op_exp, rhs_exp[i]);                                                       \
+        }                                                                                                           \
+        else                                                                                                        \
+        {                                                                                                           \
+            pass = evaluator(*lhs_exp, op_exp == CAUGHT_OP_IN ? CAUGHT_OP_EQUAL : CAUGHT_OP_NOT_EQUAL, rhs_exp[i]); \
+        }                                                                                                           \
+                                                                                                                    \
+        if (pass)                                                                                                   \
+        {                                                                                                           \
+            pass_any = true;                                                                                        \
+        }                                                                                                           \
+        else                                                                                                        \
+        {                                                                                                           \
+            pass_all = false;                                                                                       \
+        }                                                                                                           \
+    }                                                                                                               \
     return (!pass_any_op && pass_all) || (pass_any_op && pass_any);
 
 #define CAUGHT_GENERATE_EVALUATOR_ARRAY_ALLOW_NULL_TERMINATOR(lhs, op, rhs, length, evaluator, terminator) \
@@ -89,6 +100,7 @@ bool caught_internal_evaluator_exit_status(caught_internal_process_status lhs, e
         {                                                                                                  \
             length += 1;                                                                                   \
         } while (rhs[length] != terminator);                                                               \
+        length += 1; /* Include terminator */                                                              \
     }                                                                                                      \
     CAUGHT_GENERATE_EVALUATOR_ARRAY(lhs, op, rhs, length, evaluator)
 
