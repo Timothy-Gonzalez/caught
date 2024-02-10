@@ -3,9 +3,9 @@
 // #include "caught.h"
 
 #define CAUGHT_VERSION_MAJOR 0
-#define CAUGHT_VERSION_MINOR 2
-#define CAUGHT_VERSION_PATCH 3
-#define CAUGHT_VERSION_STRING "v0.2.3"
+#define CAUGHT_VERSION_MINOR 3
+#define CAUGHT_VERSION_PATCH 0
+#define CAUGHT_VERSION_STRING "v0.3.0"
 
 #define _GNU_SOURCE                                     // needed to make compiler happy, since this is the entrypoint
 extern int asprintf(char **strp, const char *fmt, ...); // sometimes also needed
