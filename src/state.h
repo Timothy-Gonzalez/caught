@@ -1,4 +1,6 @@
 #include <stddef.h>
+#include <stdbool.h>
+#include <stdio.h>
 
 #include "tests.h"
 
@@ -16,6 +18,8 @@ struct caught_internal_t
     int tests_capacity;
     int mocked_stdout_pipe[2];
     int original_stdout;
+    FILE *original_stdout_file;
+    bool is_parent;
 };
 
 extern struct caught_internal_t caught_internal_state;

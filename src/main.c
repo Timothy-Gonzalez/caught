@@ -9,7 +9,7 @@ int main()
 {
     caught_internal_initialize_color_output();
 
-    printf("\n");
+    caught_output_printf("\n");
     caught_output_header();
 
     int passed_tests = 0;
@@ -45,7 +45,7 @@ int main()
         if (!output)
             continue;
 
-        printf("\n");
+        caught_output_printf("\n");
         caught_output_test_summary(test.name, this_passed_assertions, this_failed_assertions);
     }
 
@@ -54,7 +54,7 @@ int main()
     int passed_assertions = caught_internal_state.passed_assertions;
     int failed_assertions = caught_internal_state.assertions - caught_internal_state.passed_assertions;
 
-    printf("\n");
+    caught_output_printf("\n");
     caught_output_summary("Tests:      ", passed_tests, failed_tests);
     caught_output_summary("Assertions: ", passed_assertions, failed_assertions);
     caught_output_overall_result(failed_tests == 0);

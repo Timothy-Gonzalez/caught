@@ -1,5 +1,8 @@
 #include <unistd.h>
 #include <stdlib.h>
+#ifndef __USE_POSIX
+#define __USE_POSIX
+#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -28,6 +31,13 @@ void MOCK_STDOUT()
     if (caught_internal_state.original_stdout == -1)
     {
         caught_output_perrorf("Failed to dup stdout before mocking stdout");
+    }
+
+    caught_internal_state.original_stdout_file = fdopen(caught_internal_state.original_stdout, "w");
+
+    if (caught_internal_state.original_stdout_file == NULL)
+    {
+        caught_output_perrorf("Failed to open file descriptor to original stdout");
     }
 
     if (dup2(caught_internal_state.mocked_stdout_pipe[1], STDOUT_FILENO) == -1)
@@ -93,6 +103,9 @@ char *RESTORE_STDOUT()
     caught_internal_state.mocked_stdout_pipe[0] = -1;
     caught_internal_state.mocked_stdout_pipe[1] = -1;
     caught_internal_state.original_stdout = -1;
+
+    fclose(caught_internal_state.original_stdout_file);
+    caught_internal_state.original_stdout_file = NULL;
 
     return result;
 }

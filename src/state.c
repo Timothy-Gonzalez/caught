@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "state.h"
 #include "mocks.h"
@@ -11,6 +12,8 @@ struct caught_internal_t caught_internal_state = {
     .tests_capacity = 0,
     .mocked_stdout_pipe = {-1, -1},
     .original_stdout = -1,
+    .original_stdout_file = NULL,
+    .is_parent = 1,
 };
 
 void caught_internal_cleanup_state()
