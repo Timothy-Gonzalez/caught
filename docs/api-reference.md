@@ -1,3 +1,9 @@
+# Other Resources
+
+- [Getting Started](./getting-started.md)
+- [API Reference](#api-reference)
+- [Custom Assertions](./custom-assertions.md)
+
 # API Reference
 
 - [Operators](#operators)

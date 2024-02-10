@@ -1,3 +1,9 @@
+# Other Resources
+
+- [Getting Started](./getting-started.md)
+- [API Reference](./api-reference.md)
+- [Custom Assertions](#custom-assertions)
+
 # Custom Assertions
 
 You can define your own custom assertions, for when we don't include one or you are working with custom types.

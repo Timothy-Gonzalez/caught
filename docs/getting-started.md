@@ -1,3 +1,9 @@
+# Other Resources
+
+- [Getting Started](#getting-started)
+- [API Reference](./api-reference.md)
+- [Custom Assertions](./custom-assertions.md)
+
 # Getting Started
 
 Once you've got [caught installed](../README.md#installation), writing tests is easy!
