@@ -12,30 +12,30 @@
 // of assertions accordingly.
 //
 // Note: do while is required to have non-conflicting scope if multiple assertions are used
-#define CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_lhs, type_rhs, lhs_exp, operator_exp, rhs_exp, evaluated, formated_lhs, formated_rhs, ...) \
-    do                                                                                                                                              \
-    {                                                                                                                                               \
-        type_lhs caught_internal_lhs = (lhs_exp);                                                                                                   \
-        type_rhs caught_internal_rhs = (rhs_exp);                                                                                                   \
-        enum caught_operator caught_internal_op = caught_str_to_operator(#operator_exp);                                                            \
-        caught_internal_assertion_result caught_internal_assertion_result = {                                                                       \
-            .file = __FILE__,                                                                                                                       \
-            .line = __LINE__,                                                                                                                       \
-            .expression = "EXPECT_" #func_postfix "( " #lhs_exp " " #operator_exp " " #rhs_exp " )",                                                \
-            .lhs = formated_lhs,                                                                                                                    \
-            .rhs = formated_rhs,                                                                                                                    \
-            .operator= caught_internal_op,                                                                                                          \
-            .pass = evaluated,                                                                                                                      \
-        };                                                                                                                                          \
-        if (caught_internal_handle_assertion_result(caught_internal_assertion_result))                                                              \
-        {                                                                                                                                           \
-            return;                                                                                                                                 \
-        }                                                                                                                                           \
+#define CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_lhs, type_rhs, lhs_exp, lhs_str, operator_exp, rhs_exp, rhs_str, evaluated, formated_lhs, formated_rhs, ...) \
+    do                                                                                                                                                                \
+    {                                                                                                                                                                 \
+        type_lhs caught_internal_lhs = (lhs_exp);                                                                                                                     \
+        type_rhs caught_internal_rhs = (rhs_exp);                                                                                                                     \
+        enum caught_operator caught_internal_op = caught_str_to_operator(#operator_exp);                                                                              \
+        caught_internal_assertion_result caught_internal_assertion_result = {                                                                                         \
+            .file = __FILE__,                                                                                                                                         \
+            .line = __LINE__,                                                                                                                                         \
+            .expression = "EXPECT_" #func_postfix "( " lhs_str " " #operator_exp " " rhs_str " )",                                                                    \
+            .lhs = formated_lhs,                                                                                                                                      \
+            .rhs = formated_rhs,                                                                                                                                      \
+            .operator= caught_internal_op,                                                                                                                            \
+            .pass = evaluated,                                                                                                                                        \
+        };                                                                                                                                                            \
+        if (caught_internal_handle_assertion_result(caught_internal_assertion_result))                                                                                \
+        {                                                                                                                                                             \
+            return;                                                                                                                                                   \
+        }                                                                                                                                                             \
     } while (0);
 
 // Convience mapping for when type & formatter are both the same
-#define CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(func_postfix, type, lhs, op, rhs, evaluator, formatter)                                              \
-    CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type, type, lhs, op, rhs, evaluator(caught_internal_lhs, caught_internal_op, caught_internal_rhs), \
+#define CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(func_postfix, type, lhs, op, rhs, evaluator, formatter)                                                          \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type, type, lhs, #lhs, op, rhs, #rhs, evaluator(caught_internal_lhs, caught_internal_op, caught_internal_rhs), \
                                   formatter(caught_internal_lhs), formatter(caught_internal_rhs))
 
 // Convience mapping for passing length as an argument, and when type & formatter are both the same
@@ -43,7 +43,7 @@
     do                                                                                                                                       \
     {                                                                                                                                        \
         size_t caught_internal_array_length = length_exp;                                                                                    \
-        CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type, type, lhs, op, rhs,                                                                \
+        CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type, type, lhs, #lhs, op, rhs, #rhs,                                                    \
                                       evaluator(caught_internal_lhs, caught_internal_op, caught_internal_rhs, caught_internal_array_length), \
                                       formatter(caught_internal_lhs, caught_internal_array_length),                                          \
                                       formatter(caught_internal_rhs, caught_internal_array_length))                                          \
@@ -54,10 +54,22 @@
     do                                                                                                                                                   \
     {                                                                                                                                                    \
         size_t caught_internal_array_length = length_exp;                                                                                                \
-        CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_lhs, type_rhs, lhs, op, rhs,                                                                    \
+        CAUGHT_INTERNAL_EXPECT_HANDLE(func_postfix, type_lhs, type_rhs, lhs, #lhs, op, rhs, #rhs,                                                        \
                                       evaluator(&caught_internal_lhs, caught_internal_op, caught_internal_rhs, caught_internal_array_length),            \
                                       formatter_lhs(caught_internal_lhs),                                                                                \
                                       formatter_rhs(caught_internal_rhs, caught_internal_array_length))                                                  \
+    } while (0);
+
+// Convience mapping for forking & expecting a certain status
+#define CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(func_name, expected_status, expected_status_str, execute_block)                            \
+    do                                                                                                                                     \
+    {                                                                                                                                      \
+        CAUGHT_INTERNAL_FORK(execute_block)                                                                                                \
+        CAUGHT_INTERNAL_EXPECT_HANDLE(func_name, caught_internal_process_status, caught_internal_process_status,                           \
+                                      caught_internal_fork_child_status, "process_status", ==, expected_status, expected_status_str,       \
+                                      caught_internal_evaluator_exit_status(caught_internal_lhs, caught_internal_op, caught_internal_rhs), \
+                                      caught_internal_formatter_exit_status(caught_internal_lhs),                                          \
+                                      caught_internal_formatter_exit_status(caught_internal_rhs))                                          \
     } while (0);
 
 #define EXPECT_PTR(lhs, op, rhs) \
@@ -105,18 +117,10 @@
 #define EXPECT_STR_ARRAY_ELEMENT(lhs, op, rhs, length) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_ARRAY_ELEMENT(STR_ARRAY_ELEMENT, char *, char **, lhs, op, rhs, length, caught_internal_evaluator_str_array, caught_internal_formatter_str, caught_internal_formatter_str_array)
 
-#define CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(func_name, expected_status, execute_block)                                                       \
-    do                                                                                                                                           \
-    {                                                                                                                                            \
-        CAUGHT_INTERNAL_FORK(execute_block)                                                                                                      \
-        CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(func_name, caught_internal_process_status, caught_internal_fork_child_status, ==, expected_status, \
-                                              caught_internal_evaluator_exit_status, caught_internal_formatter_exit_status);                     \
-    } while (0);
-
 #define EXPECT_EXIT(expected_status, execute_block) \
-    CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(EXIT, create_caught_internal_process_status(0, expected_status), execute_block)
+    CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(EXIT, create_caught_internal_process_status(0, expected_status), #expected_status, execute_block)
 
-#define EXPECT_SIGNAL(expected_status, execute_block) \
-    CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(EXIT, create_caught_internal_process_status(1, expected_status), execute_block)
+#define EXPECT_SIGNAL(expected_signal, execute_block) \
+    CAUGHT_INTERNAL_EXPECT_TERMINATE_HANDLE(EXIT, create_caught_internal_process_status(1, expected_signal), #expected_signal, execute_block)
 
 #endif
