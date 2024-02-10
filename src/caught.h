@@ -7,9 +7,6 @@
 #define CAUGHT_VERSION_PATCH 0
 #define CAUGHT_VERSION_STRING "v0.3.0"
 
-#define _GNU_SOURCE                                     // needed to make compiler happy, since this is the entrypoint
-extern int asprintf(char **strp, const char *fmt, ...); // sometimes also needed
-
 #ifndef CAUGHT_LIB
 #define CAUGHT_LIB
 

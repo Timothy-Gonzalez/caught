@@ -22,3 +22,13 @@ TEST("stdout - a lot of text")
     EXPECT_STR(out, ==, "The answer to life,\nthe universe,\nand everything,\nis 42.\n");
     free(out);
 }
+
+TEST("stdout - with expect")
+{
+    MOCK_STDOUT();
+    puts("This is fun!");
+    EXPECT_INT(1 + 1, ==, 2);
+    char *out = RESTORE_STDOUT();
+    EXPECT_STR(out, ==, "This is fun!\n");
+    free(out);
+}

@@ -15,10 +15,12 @@ void caught_output_info();
 void caught_output_bold();
 void caught_output_reset();
 
-void caught_output_header();
 void caught_output_internal_error(bool use_perror, char *fstr, va_list args);
 void caught_output_perrorf(char *fstr, ...);
 void caught_output_errorf(char *fstr, ...);
+void caught_output_printf(char *fstr, ...);
+
+void caught_output_header();
 void caught_output_status_tag(int pass);
 void caught_output_assertion_result(caught_internal_assertion_result assertion_result);
 void caught_output_test_summary(const char *test_name, int passed, int failed);
