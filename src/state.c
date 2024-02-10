@@ -16,7 +16,7 @@ struct caught_internal_t caught_internal_state = {
     .is_parent = 1,
 };
 
-void caught_internal_cleanup_state()
+void caught_internal_cleanup_state(bool exiting)
 {
     if (caught_internal_state.tests)
     {
@@ -26,7 +26,7 @@ void caught_internal_cleanup_state()
         caught_internal_state.tests_capacity = 0;
     }
 
-    if (caught_internal_state.original_stdout != -1)
+    if (exiting && caught_internal_state.original_stdout != -1)
     {
         RESTORE_STDOUT();
     }
