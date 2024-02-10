@@ -68,18 +68,31 @@
                                       formatter_rhs(caught_internal_rhs, caught_internal_array_length))                                                  \
     } while (0);
 
+// Convience mapping for having the same types & formatters, but custom expression str
+#define CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC_CUSTOM_EXPR(expression_str, type, lhs, op, rhs, evluator, formatter) \
+    CAUGHT_INTERNAL_EXPECT_HANDLE(expression_str, type, type, lhs, op, rhs,                                        \
+                                  evluator(caught_internal_lhs, caught_internal_op, caught_internal_rhs),          \
+                                  formatter(caught_internal_lhs), formatter(caught_internal_rhs))
+
 // Convience mapping for forking & expecting a certain status
-#define CAUGHT_INTERNAL_EXPECT_HANDLE_TERMINATE(func_postfix, expected_status, expected_status_str, execute_block)                         \
-    do                                                                                                                                     \
-    {                                                                                                                                      \
-        CAUGHT_INTERNAL_FORK(execute_block)                                                                                                \
-        CAUGHT_INTERNAL_EXPECT_HANDLE(CAUGHT_INTERNAL_EXPECT_EXPRESSION_STR(func_postfix, "process_status", "==", expected_status_str),    \
-                                      caught_internal_process_status, caught_internal_process_status,                                      \
-                                      caught_internal_fork_child_status, ==, expected_status,                                              \
-                                      caught_internal_evaluator_exit_status(caught_internal_lhs, caught_internal_op, caught_internal_rhs), \
-                                      caught_internal_formatter_exit_status(caught_internal_lhs),                                          \
-                                      caught_internal_formatter_exit_status(caught_internal_rhs))                                          \
+#define CAUGHT_INTERNAL_EXPECT_HANDLE_TERMINATE(func_postfix, expected_status, expected_status_str, execute_block) \
+    do                                                                                                             \
+    {                                                                                                              \
+        CAUGHT_INTERNAL_FORK(execute_block)                                                                        \
+        CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC_CUSTOM_EXPR(                                                         \
+            CAUGHT_INTERNAL_EXPECT_EXPRESSION_STR(func_postfix, "process_status", "==", expected_status_str),      \
+            caught_internal_process_status, caught_internal_fork_child_status, ==, expected_status,                \
+            caught_internal_evaluator_exit_status, caught_internal_formatter_exit_status)                          \
     } while (0);
+
+#define EXPECT(expr)                                   \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC_CUSTOM_EXPR( \
+        "EXPECT( " #expr " )", bool, expr, ==, true,   \
+        caught_internal_evaluator_bool, caught_internal_formatter_bool)
+#define EXPECT_NOT(expr)                               \
+    CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC_CUSTOM_EXPR( \
+        "EXPECT( " #expr " )", bool, expr, ==, false,  \
+        caught_internal_evaluator_bool, caught_internal_formatter_bool)
 
 #define EXPECT_PTR(lhs, op, rhs) \
     CAUGHT_INTERNAL_EXPECT_HANDLE_GENERIC(PTR, void *, lhs, op, rhs, caught_internal_evaluator_ptr, caught_internal_formatter_ptr)
