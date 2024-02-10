@@ -23,12 +23,32 @@ TEST("stdout - a lot of text")
     free(out);
 }
 
-TEST("stdout - with expect")
+TEST("stdout - with generic expect")
 {
     MOCK_STDOUT();
     puts("This is fun!");
     EXPECT_INT(1 + 1, ==, 2);
     char *out = RESTORE_STDOUT();
     EXPECT_STR(out, ==, "This is fun!\n");
+    free(out);
+}
+
+TEST("stdout - no output")
+{
+    MOCK_STDOUT();
+    char *out = RESTORE_STDOUT();
+    EXPECT_STR(out, ==, "");
+    free(out);
+}
+
+TEST("stdout - with expect exit")
+{
+    MOCK_STDOUT();
+    EXPECT_EXIT(1, {
+        puts("Hello!");
+        exit(1);
+    });
+    char *out = RESTORE_STDOUT();
+    EXPECT_STR(out, ==, "Hello!\n");
     free(out);
 }

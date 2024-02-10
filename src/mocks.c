@@ -1,5 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <poll.h>
 #ifndef __USE_POSIX
 #define __USE_POSIX
 #endif
@@ -68,7 +70,20 @@ char *RESTORE_STDOUT()
 
     char *buffer = malloc(RESTORE_STDOUT_BUFFER_SIZE);
 
-    while (1)
+    struct pollfd poll_fds = {
+        .fd = caught_internal_state.mocked_stdout_pipe[0],
+        .events = POLLIN,
+    };
+    int res = poll(&poll_fds, 1, 0);
+
+    if (res < 0 || poll_fds.revents & (POLLERR | POLLNVAL))
+    {
+        caught_output_perrorf("Failed to poll mocked output pipe");
+    }
+
+    bool has_data_to_read = poll_fds.revents & POLLIN;
+
+    while (has_data_to_read)
     {
         ssize_t size = read(caught_internal_state.mocked_stdout_pipe[0], buffer, RESTORE_STDOUT_BUFFER_SIZE);
 
