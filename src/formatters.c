@@ -1,6 +1,8 @@
 #include "formatters.h"
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <stdio.h>
 
 char *caught_internal_formatter_ptr(void *value)
