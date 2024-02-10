@@ -73,3 +73,14 @@ TEST("int - arrays")
     EXPECT_INT_ARRAY(array2, <, array3, 4);
     EXPECT_INT_ARRAY(array3, >, array2, 4);
 }
+
+TEST("int - in")
+{
+    int array[] = {1, 2, 3, 4};
+
+    EXPECT_INT_ARRAY_ELEMENT(1, in, array, 4);
+    EXPECT_INT_ARRAY_ELEMENT(3, in, array, 4);
+
+    EXPECT_INT_ARRAY_ELEMENT(5, not in, array, 4);
+    EXPECT_INT_ARRAY_ELEMENT(4, not in, array, 3);
+}

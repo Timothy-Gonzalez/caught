@@ -54,3 +54,14 @@ TEST("ptr - arrays")
     EXPECT_PTR_ARRAY(array2, <, array3, 3);
     EXPECT_PTR_ARRAY(array3, >, array2, 3);
 }
+
+TEST("ptr - in")
+{
+    void *array[] = {(void *)0x1, (void *)0x2, (void *)0x3};
+
+    EXPECT_PTR_ARRAY_ELEMENT((void *)0x1, in, array, 3);
+    EXPECT_PTR_ARRAY_ELEMENT((void *)0x2, in, array, 3);
+
+    EXPECT_PTR_ARRAY_ELEMENT(NULL, not in, array, 3);
+    EXPECT_PTR_ARRAY_ELEMENT((void *)0x3, not in, array, 2);
+}

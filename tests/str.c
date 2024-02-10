@@ -56,3 +56,19 @@ TEST("str - arrays")
     EXPECT_STR_ARRAY(array, !=, array2, 3);
     EXPECT_STR_ARRAY(array, ==, array2, 2);
 }
+
+TEST("str - array in")
+{
+    char *array[] = {"123", "456", "789"};
+
+    EXPECT_STR_ARRAY_ELEMENT("123", in, array, 3);
+    EXPECT_STR_ARRAY_ELEMENT("456", in, array, 3);
+
+    EXPECT_STR_ARRAY_ELEMENT("346", not in, array, 3);
+    EXPECT_STR_ARRAY_ELEMENT("789", not in, array, 2);
+
+    char *null_terminated[] = {"abc", "def", NULL};
+
+    EXPECT_STR_ARRAY_ELEMENT("abc", in, null_terminated, -1);
+    EXPECT_STR_ARRAY_ELEMENT("wxy", not in, null_terminated, -1);
+}
