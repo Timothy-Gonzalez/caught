@@ -15,12 +15,55 @@ A lightweight & simple C testing library
 - No setup - just #include
 - Easy to use syntax
 - Beautiful colored output that just works
-- TO DO: add real features
+- Easily expand for custom types
+
+# Example test
+
+```c
+int factorial(n)
+{
+    return n <= 1 ? 1 : factorial(n - 1) * n;
+}
+
+TEST("factorial")
+{
+    EXPECT_INT(factorial(1), ==, 1);
+    EXPECT_INT(factorial(2), ==, 2);
+    EXPECT_INT(factorial(3), ==, 6);
+    EXPECT_INT(factorial(4), ==, 24);
+    EXPECT_INT(factorial(5), ==, 120);
+}
+```
 
 # Installation
 
-To be explained
+1. Download the `caught.h` and `caught.c` files from the [latest release](https://github.com/Timothy-Gonzalez/caught/releases/latest)
+2. In your test files, simply `#include "caught.h"`
+3. Modify your compiler to compile your tests & `caught.c`
+4. See [Usage](#usage) for how to begin!
+
+> **Note:** your code cannot include a `main` function as Caught needs to define it.
+
+<details>
+<summary>One file solution</summary>
+If you only want to have one test file, you can put the contents of `caught.c` at the end of `caught.h`
+and just include that instead, without modifying your compiler to compile `caught.c`.
+
+This works because there cannot be duplicate definitions of `main`.
+</details>
+
+<details>
+<summary>From source</summary>
+If you want, you can always download the full source and use that directly.
+
+However, you will need to make sure you include the actual path to `caught.h` (`#include "path/to/caught.h"`) and
+update your compiler to compile all of Caught's files.
+</details>
+
 
 # Usage
 
-To be explained
+Please see the following docs:
+- [Getting Started](docs/getting-started.md)
+- [API Reference](docs/api-reference.md)
+- [Custom Assertions](docs/custom-assertions.md)
