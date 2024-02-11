@@ -1,4 +1,7 @@
 #include <stdbool.h>
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <string.h>
 #include "fork.h"
 #include "assertion-result.h"
@@ -21,6 +24,8 @@ bool caught_internal_evaluator_int_array(int *lhs, enum caught_operator operator
 bool caught_internal_evaluator_char(char lhs, enum caught_operator operator, char rhs);
 bool caught_internal_evaluator_char_ptr(char *lhs, enum caught_operator operator, char * rhs);
 bool caught_internal_evaluator_char_array(char *lhs, enum caught_operator operator, char * rhs, ssize_t length);
+
+bool caught_internal_evaluator_str_match(char *lhs, char *fstr);
 
 bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, char * rhs);
 bool caught_internal_evaluator_str_ptr(char **lhs, enum caught_operator operator, char ** rhs);

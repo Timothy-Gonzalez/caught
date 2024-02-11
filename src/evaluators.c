@@ -1,7 +1,7 @@
 #include "evaluators.h"
 #include "output.h"
 #include <stdlib.h>
-#include <stdio.h>
+#include "match.h"
 
 // Evaluators take in a left hand size, operator, and right hand side
 // they then evaluate the result of that expression
@@ -81,6 +81,10 @@ bool caught_internal_evaluator_str(char *lhs, enum caught_operator operator, cha
         return !null_exists && (strstr(rhs, lhs) != NULL);
     case CAUGHT_OP_NOT_IN:
         return null_exists || (strstr(rhs, lhs) == NULL);
+    case CAUGHT_OP_MATCH:
+        return !null_exists && caught_internal_match(lhs, rhs);
+    case CAUGHT_OP_NOT_MATCH:
+        return null_exists || !caught_internal_match(lhs, rhs);
     default:
         caught_output_errorf("Cannot compare strings with %s, only == and != are supported!", caught_operator_to_str(operator));
         return false;

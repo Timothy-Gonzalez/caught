@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include "assertion-result.h"
 #ifndef CAUGHT_OUTPUT
 #define CAUGHT_OUTPUT
