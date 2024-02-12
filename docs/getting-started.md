@@ -165,6 +165,7 @@ TEST("str - match")
 
     EXPECT_STR("a 123c number char", match, "a $i$c number char");
     EXPECT_STR("two nice looking - awesome beings strings", match, "two $s - $s strings");
+    EXPECT_STR("will backtrace", match, "$s$s");
 
     EXPECT_STR("abc", not match, "def");
     EXPECT_STR("the char is missing: ", not match, "the char is missing: $c");
@@ -172,7 +173,6 @@ TEST("str - match")
     EXPECT_STR("the no whitespace \t match", not match, "the no whitespace $w match");
     EXPECT_STR("the string is missing: ", not match, "the string is missing: $s");
     EXPECT_STR("not a match", not match, "not a $s match");
-    EXPECT_STR("too greedy", not match, "$s$s");
 }
 ```
 
