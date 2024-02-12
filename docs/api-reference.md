@@ -16,6 +16,9 @@
 
 ## Operators
 
+### `==`, `!=`, `>`, `<`, `>=`, `<=`
+
+The same as the standrd C operators:
 - `==`
   - Requires actual to be equal to expected.
 - `!=`
@@ -28,14 +31,46 @@
   - Requires actual to be greater than or equal to expected.
 - `<=`
   - Requires actual to be less than or equal to expected.
+
+### `in` and `not in`
+
+Only defined for strings and array elements.
+
 - `in`
   - Requires actual to be in expected.
-  - Only defined for strings and array elements
-    - `EXPECT_STR("abc", in, "abcdef")`
-    - `EXPECT_INT_ARRAY_ELEMENT(1, in, {1, 2, 3})`
 - `not in`
   - **Inverse of above**: requires actual to **not** be in expected.
-  - Only defined for strings and array elements
+
+Examples:
+- `EXPECT_STR("abc", in, "abcdef")`
+- `EXPECT_INT_ARRAY_ELEMENT(1, in, {1, 2, 3})`
+
+### `match` and `not match`
+
+Only defined for strings.
+
+- `match`
+  - Requires actual to match expected.
+- `not match`
+  - **Inverse of above**: requires actual to **not** match expected.
+
+Examples:
+- `EXPECT_STR("abc", match, "abc")`
+- `EXPECT_STR("a a char", match, "a $c char")`
+- `EXPECT_STR("a 123 number", match, "a $i number")`
+- `EXPECT_STR("abc", not match, "def")`
+- See [sample tests](../tests/str.c) for more
+
+Match specifiers are specified with `$`:
+- `$i`, `$d` = match a integer (0-9)
+- `$c` = match a single character
+- `$f` = match a float (0-9, a single . allowed)
+- `$a` = match alpha-chars (a-z and A-Z)
+- `$w` = match a word (matches anything non-whitespace)
+- `$s` = match a string (at least 1 character)
+- `$$` = a literal $
+- Anything else = literal match
+- **Note:** Having two greedy operators like $s without a literal match between them (`$s$s`) will fail
 
 ## Expect Assertions
 
