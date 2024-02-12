@@ -47,6 +47,7 @@ TEST("str - match")
     EXPECT_STR("the no whitespace \t match", not match, "the no whitespace $w match");
     EXPECT_STR("the string is missing: ", not match, "the string is missing: $s");
     EXPECT_STR("not a match", not match, "not a $s match");
+    EXPECT_STR("Word, yeah", not match, "$w");
 
     // Evil test cases (not examples, stress testing verification only)
     EXPECT_STR("ABC_ABC_ABC", match, "$s_$s_$s");

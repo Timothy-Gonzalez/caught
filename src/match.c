@@ -156,8 +156,8 @@ static bool match(char *str, caught_internal_matcher_fstr_segment *segments)
     char *segment_str = segment.segment;
     if (segment_str == NULL)
     {
-        // we reached the last segment, we did it!
-        return true;
+        // we reached the last segment & end of str, we did it!
+        return *str == '\0';
     }
     caught_internal_matcher matcher = segment.matcher;
 
