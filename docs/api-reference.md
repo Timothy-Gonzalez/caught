@@ -70,7 +70,7 @@ Match specifiers are specified with `$`:
 - `$s` = match a string (at least 1 character)
 - `$$` = a literal $
 - Anything else = literal match
-- **Note:** Having two greedy operators like $s without a literal match between them (`$s$s`) will fail
+- **Note:** Supports backtracing so `abc` will match `$s$s` but `a` won't
 
 ## Expect Assertions
 

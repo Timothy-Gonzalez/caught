@@ -99,7 +99,7 @@ static caught_internal_matcher_fstr_segment *break_fstr_segments(char *fstr)
         bool is_end_of_specifier = (strlen(buffer) >= 2) && (segment.is_specifier);
         bool split = (is_$ && !next_$) || (is_end_of_specifier);
 
-        if ((i == length || split) && strlen(buffer) > 1)
+        if ((i == length || split) && strlen(buffer) >= 1)
         {
             segment.segment = strdup(buffer);
             if (segment.is_specifier)
@@ -150,6 +150,96 @@ static void break_fstr_segments_cleanup(caught_internal_matcher_fstr_segment *se
     free(segments);
 }
 
+static bool match(char *str, caught_internal_matcher_fstr_segment *segments)
+{
+    caught_internal_matcher_fstr_segment segment = *segments;
+    char *segment_str = segment.segment;
+    if (segment_str == NULL)
+    {
+        // we reached the last segment, we did it!
+        return true;
+    }
+    caught_internal_matcher matcher = segment.matcher;
+
+    caught_internal_matcher_fstr_segment next_segment = *(segments + 1);
+    char *next_segment_str = next_segment.segment;
+    bool last_segment = next_segment_str == NULL;
+
+    // Literal matches
+    if (!segment.is_specifier)
+    {
+        if (strncmp(str, segment_str, strlen(segment_str)) != 0)
+        {
+            return false;
+        }
+        return match(str + strlen(segment_str), segments + 1);
+    }
+
+    // Specifier matches
+    bool found_match = false;
+
+    size_t match_size = 0;
+    bool only_one_flag = false;
+    while (match_size < strlen(str))
+    {
+        char c = str[match_size];
+
+        // Apply whitelist
+        if (matcher.whitelist)
+        {
+            if (strchr(matcher.whitelist, c) == NULL)
+            {
+                break;
+            }
+        }
+
+        // Apply blacklist
+        if (matcher.blacklist)
+        {
+            if (strchr(matcher.blacklist, c) != NULL)
+            {
+                break;
+            }
+        }
+
+        // Only one condition - if more than one we fail
+        if (matcher.only_one != '\0' && c == matcher.only_one)
+        {
+            if (only_one_flag)
+            {
+                break;
+            }
+            only_one_flag = true;
+        }
+
+        match_size += 1;
+
+        // Look ahead - if next non-specifier doesn't match - we can't do this
+        if (!last_segment && !next_segment.is_specifier)
+        {
+            if (strncmp(str + match_size, next_segment_str, strlen(next_segment_str)) != 0)
+            {
+                continue;
+            }
+        }
+
+        // Match size worked
+        found_match = match(str + match_size, segments + 1);
+
+        if (found_match)
+        {
+            break;
+        }
+
+        if (match_size == 1 && !matcher.match_all)
+        {
+            break;
+        }
+    }
+
+    return found_match;
+}
+
 bool caught_internal_match(char *str, char *fstr)
 {
     assert(str);
@@ -162,95 +252,7 @@ bool caught_internal_match(char *str, char *fstr)
         segments_len++;
     }
 
-    size_t i;
-    for (i = 0; i < segments_len; ++i)
-    {
-        caught_internal_matcher_fstr_segment segment = segments[i];
-        caught_internal_matcher matcher = segment.matcher;
-        char *segment_str = segment.segment;
-        // Literal matches
-        if (!segment.is_specifier)
-        {
-            if (strncmp(str, segment_str, strlen(segment_str)) != 0)
-            {
-                break_fstr_segments_cleanup(segments);
-                return false;
-            }
-            str += strlen(segment_str);
-            continue;
-        }
-
-        size_t match_size = 0;
-        ssize_t best_match_size = -1;
-        bool only_one_flag = false;
-        while (match_size < strlen(str))
-        {
-            char c = str[match_size];
-
-            // Apply whitelist
-            if (matcher.whitelist)
-            {
-                if (strchr(matcher.whitelist, c) == NULL)
-                {
-                    break;
-                }
-            }
-
-            // Apply blacklist
-            if (matcher.blacklist)
-            {
-                if (strchr(matcher.blacklist, c) != NULL)
-                {
-                    break;
-                }
-            }
-
-            // Only one condition - if more than one we fail
-            if (matcher.only_one != '\0' && c == matcher.only_one)
-            {
-                if (only_one_flag)
-                {
-                    break;
-                }
-                only_one_flag = true;
-            }
-
-            match_size += 1;
-
-            // Look ahead - if next non-specifier doesn't match - we can't do this
-            if (i < segments_len - 1)
-            {
-                caught_internal_matcher_fstr_segment next_segment = segments[i + 1];
-                char *next_segment_str = next_segment.segment;
-                if (!next_segment.is_specifier)
-                {
-                    if (strncmp(str + match_size, next_segment_str, strlen(next_segment_str)) != 0)
-                    {
-                        continue;
-                    }
-                }
-            }
-
-            // Match size worked
-            best_match_size = match_size;
-
-            if (match_size == 1 && !matcher.match_all)
-            {
-                break;
-            }
-        }
-
-        if (best_match_size == -1)
-        {
-            break_fstr_segments_cleanup(segments);
-            return false;
-        }
-
-        str += best_match_size;
-        fstr += 1;
-    }
-
-    // Everything passed
+    bool result = match(str, segments);
     break_fstr_segments_cleanup(segments);
-    return true;
+    return result;
 }
