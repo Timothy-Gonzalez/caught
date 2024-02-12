@@ -16,6 +16,7 @@ struct caught_internal_t
     caught_internal_test *tests;
     int tests_num;
     int tests_capacity;
+    int original_stdin;
     int mocked_stdout_pipe[2];
     int original_stdout;
     FILE *original_stdout_file;

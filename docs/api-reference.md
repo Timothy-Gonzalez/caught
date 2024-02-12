@@ -221,6 +221,19 @@ Expects the code contained to exit with a certain signal.
 
 ## Mocking
 
+### `MOCK_STDIN(char* input)`
+
+Redirects reads from stdin to read from the input string instead.
+Can be restored & read using [`RESTORE_STDIN()`](#restore_stdin).
+
+[See sample tests](../tests/stdin.c).
+
+### `RESTORE_STDIN()`
+
+Undos stdin mock from [`MOCK_STDIN()`](#mock_stdinchar-input). Should be used AFTER stdin has been read.
+
+[See sample tests](../tests/stdin.c).
+
 ### `MOCK_STDOUT()`
 
 Redirects anything output to `stdout` (`printf`, `puts`, etc.) into a mock.
