@@ -41,7 +41,7 @@ typedef struct caught_internal_matcher_fstr_segment caught_internal_matcher_fstr
  *
  * Anything else = literal match
  *
- * Having two greedy operators like $s without a literal match between them ("$s$s") will fail
+ * Supports backtracing so "abc" will match "$s$s" but "a" won't
  */
 bool caught_internal_match(char *str, char *fstr);
 
