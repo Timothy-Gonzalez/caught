@@ -26,6 +26,29 @@ TEST("str - in")
     EXPECT_STR("123", not in, "12121223141246");
 }
 
+TEST("str - match")
+{
+    EXPECT_STR("abc", match, "abc");
+    EXPECT_STR("a a char", match, "a $c char");
+    EXPECT_STR("a 123 number", match, "a $i number");
+    EXPECT_STR("a 123.456 float", match, "a $f float");
+    EXPECT_STR("the alphabet match", match, "the $a match");
+    EXPECT_STR("the word123 match", match, "the $w match");
+    EXPECT_STR("a very long string", match, "a $s string");
+    EXPECT_STR("a literal $ can work", match, "a literal $$ can work");
+
+    EXPECT_STR("a 123c number char", match, "a $i$c number char");
+    EXPECT_STR("two nice looking - awesome beings strings", match, "two $s - $s strings");
+
+    EXPECT_STR("abc", not match, "def");
+    EXPECT_STR("the char is missing: ", not match, "the char is missing: $c");
+    EXPECT_STR("the no alpha 123 match", not match, "the no alpha $a match");
+    EXPECT_STR("the no whitespace \t match", not match, "the no whitespace $w match");
+    EXPECT_STR("the string is missing: ", not match, "the string is missing: $s");
+    EXPECT_STR("not a match", not match, "not a $s match");
+    EXPECT_STR("too greedy", not match, "$s$s");
+}
+
 TEST("str - ptrs")
 {
     char *array[] = {"abc", "def", NULL};
