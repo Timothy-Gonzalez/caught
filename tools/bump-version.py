@@ -1,5 +1,17 @@
 from os import path
 import re
+import subprocess
+
+try:
+    subprocess.check_output(['git', '--version'])
+except (subprocess.CalledProcessError, FileNotFoundError):
+    print("git not installed!")
+    exit(1)
+try:
+    subprocess.check_output(['git', 'diff', "--cached", "--exit-code"])
+except (subprocess.CalledProcessError):
+    print("Please commit your changes before bumping version!")
+    exit(1)
 
 CAUGHT_ENTRY_H = path.join("src", "caught.h")
 
@@ -15,8 +27,6 @@ def format_version(version):
     return f"v{version['MAJOR']}.{version['MINOR']}.{version['PATCH']}"
 
 current_version_str = format_version(current_version)
-
-print(current_version)
 
 print(f"Current version: {current_version_str}")
 print("1: Bump patch\n2: Bump minor\n3: Bump major")
@@ -50,3 +60,7 @@ new_content = version_str_pattern.sub(
 
 with open(CAUGHT_ENTRY_H, 'w') as file:
     file.write(new_content)
+
+subprocess.call(["git", "add", CAUGHT_ENTRY_H])
+subprocess.call(["git", "commit", CAUGHT_ENTRY_H, "-m", f"Bump version to {new_version_str}"])
+subprocess.call(["git", "tag", new_version_str, "-m", new_version_str])
