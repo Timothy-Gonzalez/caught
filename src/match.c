@@ -99,7 +99,7 @@ static caught_internal_matcher_fstr_segment *break_fstr_segments(char *fstr)
         bool is_end_of_specifier = (strlen(buffer) >= 2) && (segment.is_specifier);
         bool split = (is_$ && !next_$) || (is_end_of_specifier);
 
-        if (i == length || split)
+        if ((i == length || split) && strlen(buffer) > 1)
         {
             segment.segment = strdup(buffer);
             if (segment.is_specifier)
