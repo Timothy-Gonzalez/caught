@@ -47,8 +47,11 @@ jobs:
 
       - name: Run tests (valgrind)
         run: |
-          valgrind bin/tests-debug 2> valgrind_output.txt 1>&2 || true
+          valgrind --leak-check=full -s --show-leak-kinds=all bin/tests-debug 2> valgrind_output.txt 1>&2 || true
           cat valgrind_output.txt
           if ! tail -7 valgrind_output.txt | grep -q "All heap blocks were freed -- no leaks are possible" valgrind_output.txt; then
+            exit 1; # exit if not found, we need this check because valgrind exit codes are bad
+          fi
+          if ! tail -7 valgrind_output.txt | grep -q "ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)" valgrind_output.txt; then
             exit 1; # exit if not found, we need this check because valgrind exit codes are bad
           fi
