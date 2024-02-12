@@ -22,6 +22,10 @@ int main()
 
         test.handler();
 
+        if (caught_internal_state.original_stdin != -1)
+        {
+            caught_output_errorf("Must restore stdin after mocking it, did you forget to call RESTORE_STDIN()?");
+        }
         if (caught_internal_state.original_stdout != -1)
         {
             caught_output_errorf("Must restore stdout after mocking it, did you forget to call RESTORE_STDOUT()?");
