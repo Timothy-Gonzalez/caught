@@ -200,8 +200,26 @@ TEST("exit and signal")
 
 ## Mocking
 
-Caught provides the ability to mock `stdout`.
+Caught provides the ability to mock `stdin` and `stdout`.
 This can be useful when you can't or don't want to change your logging for testing.
+
+```c
+EST("stdin - hello world")
+{
+    MOCK_STDIN("Hello, world!\n");
+    char *line = NULL;
+    size_t line_cap = 0;
+
+    ssize_t len = getline(&line, &line_cap, stdin);
+
+    RESTORE_STDIN();
+
+    EXPECT_INT(len, !=, -1);
+    EXPECT_STR(line, ==, "Hello, world!\n");
+
+    free(line);
+}
+```
 
 ```c
 TEST("stdout - hello world")
