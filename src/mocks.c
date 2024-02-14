@@ -154,7 +154,7 @@ char *RESTORE_STDOUT()
         if (result_size + CAUGHT_MOCK_BUFFER_SIZE >= result_capacity)
         {
             result_capacity *= CAUGHT_MOCK_RESULT_GROW_RATE;
-            buffer = realloc(buffer, result_capacity);
+            result = realloc(result, result_capacity);
         }
     }
 

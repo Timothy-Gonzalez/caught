@@ -45,3 +45,33 @@ TEST("stdin - with expect exit & MOCK_STDOUT")
 
     free(out);
 }
+
+TEST("stdin - no newline, only EOF")
+{
+    MOCK_STDIN("Hello, world!"
+               " This is a really long string that will keep going on and on"
+               "and on for a while but never ever ever have a newline to be breaking up the flow of life.");
+    char *line = NULL;
+    size_t line_cap = 0;
+    ssize_t len = 0;
+    char buffer[500];
+    size_t buffer_size = 0;
+
+    while ((len = getline(&line, &line_cap, stdin)) != -1)
+    {
+        memcpy(buffer + buffer_size, line, len);
+        buffer_size += len;
+    }
+    buffer[buffer_size] = '\0';
+
+    RESTORE_STDIN();
+
+    EXPECT_STR(buffer, ==, "Hello, world!"
+                           " This is a really long string "
+                           "that will keep going on and on"
+                           "and on for a while but never ever "
+                           "ever have a newline to be breaking "
+                           "up the flow of life.");
+
+    free(line);
+}

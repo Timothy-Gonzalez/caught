@@ -41,6 +41,15 @@ TEST("stdout - no output")
     free(out);
 }
 
+TEST("stdout - no newline")
+{
+    MOCK_STDOUT();
+    printf("wow this is a cool string yes it is");
+    char *out = RESTORE_STDOUT();
+    EXPECT_STR(out, ==, "wow this is a cool string yes it is");
+    free(out);
+}
+
 TEST("stdout - with expect exit")
 {
     MOCK_STDOUT();
